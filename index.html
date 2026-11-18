@@ -341,6 +341,7 @@ function render(){
   if (cat === "grammar") mode==="learn" ? renderGrammar() : renderGrammarQuiz();
   else mode==="learn" ? renderLearn() : renderQuiz();
   window.scrollTo(0,0);
+  if (window.__toursReady) maybeSectionTour();
 }
 document.getElementById("mLearn").onclick = ()=>{ mode="learn"; render(); };
 document.getElementById("mQuiz").onclick = ()=>{ mode="quiz"; score=0; total=0; render(); };
@@ -362,8 +363,67 @@ const FULL_TOUR = [
   { el:()=>$("#next"), text:'Зелёный — правильно, красный — ошибка. За правильный ответ — очко! ⭐<br>Нажми <b>«Дальше»</b> — будет новый вопрос ' + POINT, wait:true },
   { el:()=>tabBtn("Правила"), text:`Здесь простые <b>правила</b>. Нажми <b>«Правила»</b> ${POINT}`, wait:true, before:()=>{ mode="learn"; render(); } },
   { el:()=>$(".ex"), text:`Нажми на пример — услышишь, как он звучит ${POINT}`, wait:true },
-  { el:()=>$("#helpBtn"), text:'Если забудешь, как пользоваться, — нажми <b>❓</b>, и я покажу всё снова.<br><b>Молодец, ты всё умеешь! 🎉</b>', btn:"Начать учиться!", after:()=>{ cat="numbers"; mode="learn"; render(); } }
+  { el:()=>$("#helpBtn"), text:'Когда откроешь другую тему в первый раз, я тоже покажу, что там делать.<br>Если забудешь — нажми <b>❓</b>, и я покажу всё снова.<br><b>Молодец! 🎉</b>', btn:"Начать учиться!", after:()=>{ cat="numbers"; mode="learn"; render(); } }
 ];
+
+// Подсказки для каждого раздела: показываются, когда ребёнок впервые открывает раздел.
+const cardAt = n => document.querySelectorAll(".card")[n];
+const SECTION_TOURS = {
+  "numbers:learn": [
+    { el:()=>cardAt(0), text:`Это <b>числа</b>. Нажми на <b>1</b> — услышишь, как сказать «один» по-английски ${POINT}`, wait:true },
+    { el:()=>cardAt(12), text:'Это <b>13 — thirteen</b>. Нажми на карточку и послушай ' + POINT, wait:true },
+    { el:()=>cardAt(20), text:'А это <b>30 — thirty</b>. Похоже на 13, правда? Нажми и послушай разницу ' + POINT, wait:true },
+    { el:()=>$(".hint"), text:'<b>-teen</b> — это 13–19, <b>-ty</b> — это 20, 30, 40… Не путай! 😉' }
+  ],
+  "animals:learn": [
+    { el:()=>cardAt(0), text:`Это <b>животные</b>. Нажми на кошку — услышишь слово ${POINT}`, wait:true },
+    { el:()=>cardAt(1), text:`Теперь нажми на собаку ${POINT}`, wait:true },
+    { el:()=>cardAt(1).querySelector(".tr"), text:'Скажи вслух: <b>«дог»</b>! Нажимай на любые карточки и повторяй слова.' }
+  ],
+  "fruits:learn": [
+    { el:()=>cardAt(0), text:`Это <b>фрукты</b>. Нажми на яблоко — услышишь, как оно называется ${POINT}`, wait:true },
+    { el:()=>cardAt(0).querySelector(".tr"), text:'<b>apple [эпл]</b> — яблоко. Скажи вслух! Потом послушай другие фрукты.' }
+  ],
+  "vegetables:learn": [
+    { el:()=>cardAt(0), text:`Это <b>овощи</b>. Нажми на помидор ${POINT}`, wait:true },
+    { el:()=>cardAt(2), text:`А теперь на морковку ${POINT}`, wait:true },
+    { el:()=>cardAt(2).querySelector(".tr"), text:'<b>carrot [кэрэт]</b> — морковь. Скажи вслух! 🥕' }
+  ],
+  "colors:learn": [
+    { el:()=>cardAt(0), text:`Это <b>цвета</b>. Нажми на красный кружок ${POINT}`, wait:true },
+    { el:()=>cardAt(1), text:`Теперь нажми на синий ${POINT}`, wait:true },
+    { el:()=>cardAt(2), text:`А это голубой. Нажми ${POINT}`, wait:true },
+    { el:()=>$(".hint"), text:'По-английски и синий, и голубой — <b>blue</b>. Голубой можно сказать <b>light blue</b> — светло-синий.' }
+  ],
+  "grammar:learn": [
+    { el:()=>$(".rule h2"), text:'Это <b>правила</b>. Сначала прочитай правило — оно короткое.' },
+    { el:()=>$(".ex"), text:`Внизу примеры. Нажми на пример — услышишь его ${POINT}`, wait:true },
+    { el:()=>$(".note"), text:'💡 В жёлтой рамке — самая главная подсказка. Так в каждом правиле.' }
+  ],
+  "quiz": [
+    { el:()=>$(".big") || $(".bignum") || $(".q"), text:'Это <b>тест</b>. Посмотри на картинку и на вопрос.' },
+    { el:()=>$("#sayBtn"), text:`Хочешь подсказку? Нажми <b>«Послушать»</b> ${POINT}`, wait:true },
+    { el:()=>$(".opts"), text:`Теперь выбери правильный ответ ${POINT}`, wait:true },
+    { el:()=>$("#next"), text:'Зелёный — правильно, красный — ошибка. Нажми <b>«Дальше»</b> ' + POINT, wait:true }
+  ],
+  "grammar:quiz": [
+    { el:()=>$(".q"), text:'Это <b>тест по правилам</b>. Прочитай вопрос.' },
+    { el:()=>$(".opts"), text:`Выбери правильный ответ. Если ошибёшься — я объясню почему ${POINT}`, wait:true },
+    { el:()=>$("#fb"), text:'Здесь написано, почему так правильно. Прочитай!' },
+    { el:()=>$("#next"), text:'Нажми <b>«Дальше»</b> — будет новый вопрос ' + POINT, wait:true }
+  ]
+};
+function sectionKey(){ return cat==="grammar" ? "grammar:"+mode : (mode==="quiz" ? cat+":quiz" : cat+":learn"); }
+function seenSec(k){ try { return localStorage.getItem("sec_"+k)==="1"; } catch(e){ return false; } }
+function markSec(k){ try { localStorage.setItem("sec_"+k,"1"); } catch(e){} }
+function maybeSectionTour(){
+  if (tourOn()) return;
+  const k = sectionKey();
+  if (seenSec(k)) return;
+  const list = SECTION_TOURS[k] || (mode==="quiz" ? SECTION_TOURS["quiz"] : null);
+  markSec(k);
+  if (list) setTimeout(()=>{ if (!tourOn()) startTour(list); }, 150);
+}
 
 // Новые функции: при каждом обновлении увеличить APP_VERSION
 // и добавить сюда шаги, которые показывают и дают попробовать новое.
@@ -375,15 +435,20 @@ const NEWS = [
 const tb = $("#tourBlock"), ts = $("#tourSpot"), tbub = $("#tourBubble");
 let steps = [], si = 0, curEl = null;
 
+function tourOn(){ return tb.style.display === "block"; }
 function storeV(){ try { localStorage.setItem("tourVersion", String(APP_VERSION)); } catch(e) {} }
 
 function startTour(list){
   if (!list.length) return;
-  steps = list; si = 0; tb.style.display = "block"; showStep();
+  steps = list; si = 0; tb.style.display = "block";
+  if (list === FULL_TOUR) ["animals:learn","animals:quiz","grammar:learn"].forEach(markSec);
+  showStep();
 }
-function endTour(){
+function endTour(skipAll){
   tb.style.display = ts.style.display = tbub.style.display = "none";
   curEl = null; storeV();
+  if (skipAll) Object.keys(SECTION_TOURS).concat(["numbers:quiz","fruits:quiz","vegetables:quiz","colors:quiz","animals:quiz"]).forEach(markSec);
+  else setTimeout(maybeSectionTour, 300);
 }
 function place(){
   const st = steps[si]; if (!st) return;
@@ -429,11 +494,14 @@ tb.addEventListener("click", e=>{
   }
 });
 $("#tourNext").onclick = nextStep;
-$("#tourSkip").onclick = ()=>{ endTour(); cat="numbers"; mode="learn"; render(); };
+$("#tourSkip").onclick = ()=>{ endTour(true); };
 window.addEventListener("resize", place);
 window.addEventListener("scroll", place, true);
-$("#helpBtn").onclick = ()=>{ cat="numbers"; mode="learn"; render(); startTour(FULL_TOUR); };
+$("#helpBtn").onclick = ()=>{
+  try { Object.keys(localStorage).filter(k=>k.startsWith("sec_")).forEach(k=>localStorage.removeItem(k)); } catch(e) {}
+  markSec("numbers:learn"); cat="numbers"; mode="learn"; render(); startTour(FULL_TOUR); };
 
+window.__toursReady = true;
 let seenV = null;
 try { seenV = localStorage.getItem("tourVersion"); } catch(e) {}
 if (seenV === null) startTour(FULL_TOUR);
