@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Rus tili — noldan suhbatgacha (o'zbekcha)</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f4fb;color:#1d2330}
+  header{background:#c0392b;color:#fff;padding:12px 14px;position:sticky;top:0;z-index:5}
+  .hrow{display:flex;align-items:center;gap:8px}
+  h1{margin:0;font-size:18px;flex:1}
+  .hbtn{border:0;background:rgba(255,255,255,.22);color:#fff;border-radius:18px;padding:7px 11px;font-size:14px;cursor:pointer;text-decoration:none;white-space:nowrap}
+  .round{width:34px;height:34px;padding:0;border-radius:50%;font-size:17px}
+  main{padding:14px;max-width:760px;margin:0 auto}
+  .box{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .box h2{margin:0 0 8px;font-size:18px}
+  .muted{color:#5b6475;font-size:14px}
+  .pace{display:block;width:100%;text-align:left;border:2px solid #e3dff0;background:#fff;border-radius:14px;padding:12px 14px;margin:8px 0;cursor:pointer;font-size:15px;line-height:1.4}
+  .pace b{font-size:17px}
+  .pace.on{border-color:#c0392b;background:#fff3f1}
+  .bar{height:10px;background:#eee;border-radius:6px;overflow:hidden;margin:8px 0}
+  .bar i{display:block;height:100%;background:#27ae60}
+  .stats{display:flex;gap:10px;flex-wrap:wrap}
+  .stat{flex:1;min-width:90px;background:#f6f4fb;border-radius:12px;padding:8px 10px;text-align:center}
+  .stat b{display:block;font-size:20px}
+  .plan li{margin:6px 0;font-size:15px}
+  .big{display:block;width:100%;border:0;background:#c0392b;color:#fff;border-radius:12px;padding:14px;font-size:18px;font-weight:700;cursor:pointer;margin-top:10px}
+  .big.sec{background:#fff;color:#c0392b;border:2px solid #c0392b}
+  .lrow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid #f0edf6;font-size:15px}
+  .lrow:last-child{border-bottom:0}
+  .lrow .n{width:30px;height:30px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:0 0 30px}
+  .lrow.done .n{background:#27ae60;color:#fff}
+  .lrow.cur .n{background:#c0392b;color:#fff}
+  .lrow.lock{color:#9aa1ae}
+  .lrow.click{cursor:pointer}
+  .steps{display:flex;gap:4px;margin-bottom:10px}
+  .steps i{flex:1;height:6px;border-radius:4px;background:#e3dff0}
+  .steps i.on{background:#c0392b}
+  .lex p,.lex li{font-size:15.5px;line-height:1.5}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .card{background:#fff;border:2px solid #efeaf7;border-radius:14px;padding:10px;text-align:center;cursor:pointer;user-select:none}
+  .card:active{transform:scale(.97)}
+  .card .ru{font-size:19px;font-weight:700}
+  .card .tr{font-size:13.5px;color:#8e44ad;margin-top:2px}
+  .card .uz{font-size:14.5px;color:#3a4252;margin-top:4px}
+  .dline{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:12px;background:#f6f4fb;margin:7px 0;cursor:pointer}
+  .dline .who{font-weight:700;color:#c0392b;min-width:64px;font-size:13px;padding-top:2px}
+  .dline .ru{font-size:16.5px}
+  .dline .uz{font-size:13.5px;color:#5b6475;margin-top:2px}
+  .q{font-size:18px;margin:6px 0 12px;text-align:center}
+  .opts{display:grid;grid-template-columns:1fr;gap:8px}
+  .opts button{font-size:17px;padding:12px;border-radius:12px;border:2px solid #e3dff0;background:#fff;cursor:pointer;text-align:center}
+  .opts button.ok{background:#dff6e7;border-color:#27ae60}
+  .opts button.bad{background:#fde2e0;border-color:#e04848}
+  .fb{min-height:22px;margin-top:10px;font-size:15px;font-weight:600;text-align:center}
+  .sprompt{font-size:17px;margin:4px 0 8px}
+  .reveal{border:0;background:#f6f4fb;color:#c0392b;border-radius:10px;padding:9px 14px;font-size:15px;cursor:pointer}
+  .ans{display:none;font-size:18px;font-weight:700;margin-top:8px}
+  .sp{padding:10px 0;border-bottom:1px solid #f0edf6}
+  .sp:last-child{border-bottom:0}
+  .say{border:0;background:#f6f4fb;color:#c0392b;border-radius:18px;padding:8px 14px;font-size:15px;cursor:pointer}
+  .center{text-align:center}
+  /* tour */
+  .tblock{position:fixed;inset:0;z-index:60;background:transparent}
+  .tspot{position:fixed;z-index:61;border-radius:14px;box-shadow:0 0 0 4px #ffd23f,0 0 0 9999px rgba(15,25,50,.72);pointer-events:none;transition:all .25s}
+  .tspot.none{box-shadow:0 0 0 9999px rgba(15,25,50,.72)}
+  .tbubble{position:fixed;z-index:62;left:12px;right:12px;max-width:440px;margin:0 auto;background:#fff;border-radius:16px;padding:14px 16px;font-size:16px;line-height:1.45;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+  .tbubble .bigt{font-size:21px;font-weight:700;display:block;margin-bottom:4px}
+  .tbubble .small{font-size:13px;color:#5b6475;display:block;margin-top:6px}
+  .tbtns{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .tskip{border:0;background:none;color:#7a8396;font-size:14px;cursor:pointer;padding:6px}
+  .tnext{border:0;background:#c0392b;color:#fff;border-radius:10px;padding:10px 18px;font-size:16px;font-weight:700;cursor:pointer}
+  .tpoint{display:inline-block;animation:bob .9s infinite}
+  @keyframes bob{50%{transform:translateY(-5px)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <a class="hbtn" href="index.html" id="backBtn">⬅ 🇬🇧</a>
+    <h1>🇷🇺 Rus tili</h1>
+    <button class="hbtn round" id="setBtn" aria-label="Sozlamalar">⚙️</button>
+    <button class="hbtn round" id="helpBtn" aria-label="Yordam">❓</button>
+  </div>
+</header>
+<main id="app"></main>
+
+<div id="tourBlock" class="tblock" style="display:none"></div>
+<div id="tourSpot" class="tspot" style="display:none"></div>
+<div id="tourBubble" class="tbubble" style="display:none">
+  <div id="tourText"></div>
+  <div class="tbtns">
+    <button id="tourSkip" class="tskip">O'tkazib yuborish</button>
+    <button id="tourNext" class="tnext">Keyingi ➜</button>
+  </div>
+</div>
+
+<script>
+// 30 ta dars. w: [ruscha (urg'u belgisi bilan), o'qilishi, o'zbekcha]
+// d: [kim, ruscha, o'zbekcha]   g: [savol, [variantlar], to'g'ri javob raqami, izoh]
+const LESSONS = [
+{ t:"Alifbo va o'qish", goal:"Rus harflarini o'qishni o'rganasiz",
+  ex:`<p>Rus alifbosida <b>33 ta harf</b> bor. Agar o'zbek kirill yozuvini bilsangiz, harflarning ko'pi sizga tanish.</p>
+<p><b>O'zbek kirillida yo'q yoki boshqacha o'qiladigan harflar:</b></p>
+<ul><li><b>Ы ы</b> — "i" ga o'xshaydi, lekin tomoqroqdan: <b>сыр</b> [sir]</li>
+<li><b>Щ щ</b> — yumshoq, cho'ziq "sh": <b>щи</b> [sh'i]</li>
+<li><b>Ц ц</b> — "ts": <b>цирк</b> [tsirk]</li>
+<li><b>Ь</b> — yumshatish belgisi, o'zi o'qilmaydi: <b>день</b> [den']</li>
+<li><b>Ъ</b> — ajratish belgisi: <b>подъе́зд</b> [pad-yezd]</li></ul>
+<p>Rus tilida <b>Ў, Қ, Ғ, Ҳ</b> harflari yo'q.</p>
+<p><b>Urg'u juda muhim!</b> Urg'u tushmagan <b>o</b> ko'pincha <b>a</b> deb o'qiladi: <b>молоко́</b> → [malako]. Bu ilovada urg'uli unli ustida belgi bor: <b>а́</b>.</p>`,
+  w:[["ма́ма","mama","ona"],["па́па","papa","ota"],["дом","dom","uy"],["вода́","vada","suv"],["молоко́","malako","sut"],["сыр","sir","pishloq"],["цирк","tsirk","sirk"],["э́то","eta","bu"],["ёлка","yolka","archa"],["день","den'","kun"]],
+  d:[["A","Э́то дом?","Bu uymi?"],["B","Да, э́то дом.","Ha, bu uy."],["A","Э́то вода́?","Bu suvmi?"],["B","Нет, э́то молоко́.","Yo'q, bu sut."]],
+  g:[["«молоко́» qanday o'qiladi?",["[moloko]","[malako]","[maloko]"],1,"Urg'usiz «o» «a» deb o'qiladi: [malako]."],
+     ["Qaysi harf o'zi o'qilmaydi?",["Ы","Ц","Ь"],2,"Ь — yumshatish belgisi, o'zi tovush bermaydi."]] },
+
+{ t:"Salomlashish", goal:"Salom berish va xayrlashishni o'rganasiz",
+  ex:`<p><b>Здра́вствуйте</b> — rasmiy salom (kattalarga, notanishlarga). Birinchi «в» o'qilmaydi: [zdrastvuyte].</p>
+<p><b>Приве́т</b> — do'stona salom (do'st, tengdoshga).</p>
+<p><b>«Ты» va «Вы»:</b> ты — sen (yaqin odamga), Вы — siz (hurmat bilan, notanishga). Bilmasangiz, doim <b>Вы</b> deng.</p>`,
+  w:[["Здра́вствуйте","zdrastvuyte","Assalomu alaykum (rasmiy)"],["Приве́т","privet","Salom (do'stona)"],["До́брое у́тро","dobraye utra","Xayrli tong"],["До́брый день","dobriy den'","Xayrli kun"],["До́брый ве́чер","dobriy vecher","Xayrli kech"],["Как дела́?","kak dela","Ishlar qalay?"],["Хорошо́","kharasho","Yaxshi"],["Спаси́бо","spasiba","Rahmat"],["Пожа́луйста","pazhalusta","Iltimos / Marhamat"],["До свида́ния","da svidaniya","Xayr (rasmiy)"],["Пока́","paka","Xayr (do'stona)"]],
+  d:[["A","Здра́вствуйте!","Assalomu alaykum!"],["B","Здра́вствуйте!","Va alaykum assalom!"],["A","Как дела́?","Ishlar qalay?"],["B","Хорошо́, спаси́бо. А у вас?","Yaxshi, rahmat. Sizda-chi?"],["A","То́же хорошо́.","Menda ham yaxshi."],["B","До свида́ния!","Xayr!"]],
+  g:[["Notanish odamga qanday salom berasiz?",["Приве́т","Здра́вствуйте","Пока́"],1,"Notanishga va kattalarga — Здравствуйте."]] },
+
+{ t:"Tanishuv", goal:"O'zingizni tanishtirishni o'rganasiz",
+  ex:`<p><b>Меня́ зову́т Алише́р</b> — Mening ismim Alisher (so'zma-so'z: «meni Alisher deb chaqirishadi»).</p>
+<p><b>Из</b> = «-dan»: <b>из Узбекиста́на</b> — O'zbekistondan.</p>
+<p><b>В</b> = «-da»: <b>в Ташке́нте</b> — Toshkentda. Shahar nomi oxiriga ko'pincha <b>-е</b> qo'shiladi: Москва́ → в Москве́.</p>`,
+  w:[["Меня́ зову́т...","menya zavut","Mening ismim..."],["Как вас зову́т?","kak vas zavut","Ismingiz nima?"],["О́чень прия́тно","ochen' priyatna","Tanishganimdan xursandman"],["Отку́да вы?","atkuda vi","Qayerdansiz?"],["Я из Узбекиста́на","ya iz uzbekistana","Men O'zbekistondanman"],["Где вы живёте?","gde vi zhivyote","Qayerda yashaysiz?"],["Я живу́ в Москве́","ya zhivu v maskve","Men Moskvada yashayman"],["да","da","ha"],["нет","net","yo'q"],["и","i","va"]],
+  d:[["A","Здра́вствуйте! Меня́ зову́т А́нна. А как вас зову́т?","Assalomu alaykum! Mening ismim Anna. Sizning ismingiz nima?"],["B","Меня́ зову́т Алише́р. О́чень прия́тно.","Mening ismim Alisher. Tanishganimdan xursandman."],["A","Отку́да вы?","Qayerdansiz?"],["B","Я из Узбекиста́на. Сейча́с я живу́ в Москве́.","Men O'zbekistondanman. Hozir Moskvada yashayman."]],
+  g:[["«Toshkentda» ruschasi:",["из Ташке́нта","в Ташке́нте","Ташке́нт"],1,"«-da» — в + shahar + е: в Ташкенте."]] },
+
+{ t:"Men, sen, u", goal:"Kishilik olmoshlari va oddiy gaplar",
+  ex:`<p>Rus tilida hozirgi zamonda <b>«-man, -san» qo'shimchasi yo'q</b>, «bo'lmoq» fe'li esa tushib qoladi:</p>
+<p><b>Я студе́нт.</b> — Men talabaman. <b>Он врач.</b> — U shifokor.</p>
+<p>Inkor uchun <b>не</b>: <b>Я не врач.</b> — Men shifokor emasman.</p>
+<p>«U» uchta: <b>он</b> (erkak), <b>она́</b> (ayol), <b>оно́</b> (narsa).</p>`,
+  w:[["я","ya","men"],["ты","ti","sen"],["он","on","u (erkak)"],["она́","ana","u (ayol)"],["оно́","ano","u (narsa)"],["мы","mi","biz"],["вы","vi","siz"],["они́","ani","ular"],["студе́нт","student","talaba"],["врач","vrach","shifokor"],["бухга́лтер","buxgalter","buxgalter"]],
+  d:[["A","Вы студе́нт?","Siz talabamisiz?"],["B","Нет, я не студе́нт. Я бухга́лтер.","Yo'q, men talaba emasman. Men buxgalterman."],["A","А он?","U-chi?"],["B","Он врач.","U shifokor."]],
+  g:[["«Men shifokor emasman»:",["Я не врач.","Я врач не.","Не я врач."],0,"Inkor «не» so'zdan oldin keladi: Я не врач."],["«U (ayol)» ruschasi:",["он","она́","оно́"],1,"Ayol uchun — она."]] },
+
+{ t:"Jins: он, она, оно", goal:"Otlarning jinsini ajratishni o'rganasiz",
+  ex:`<p>Har bir ot «jins»ga ega. Oxiriga qarab bilasiz:</p>
+<ul><li><b>он</b> (erkak) — oxiri undosh: <b>стол, дом, телефо́н</b></li>
+<li><b>она́</b> (ayol) — oxiri <b>-а / -я</b>: <b>кни́га, ма́ма, неде́ля</b></li>
+<li><b>оно́</b> (o'rta) — oxiri <b>-о / -е</b>: <b>окно́, мо́ре</b></li></ul>
+<p>«Mening» ham jinsga qarab o'zgaradi: <b>мой</b> телефо́н, <b>моя́</b> кни́га, <b>моё</b> окно́.</p>
+<p>Istisno: <b>па́па</b> -а bilan tugasa ham erkak.</p>`,
+  w:[["стол","stol","stol"],["телефо́н","telefon","telefon"],["кни́га","kniga","kitob"],["ру́чка","ruchka","ruchka"],["окно́","akno","deraza"],["мо́ре","more","dengiz"],["мой","moy","mening (er.)"],["моя́","maya","mening (ay.)"],["моё","mayo","mening (o'rta)"],["Где?","gde","Qayerda?"],["вот","vot","mana"]],
+  d:[["A","Где мой телефо́н?","Mening telefonim qayerda?"],["B","Вот твой телефо́н.","Mana sening telefoning."],["A","А где моя́ кни́га?","Mening kitobim qayerda?"],["B","Вот она́.","Mana u."]],
+  g:[["«кни́га» qaysi jins?",["он","она́","оно́"],1,"-а bilan tugaydi — она."],["«... окно́» — to'g'ri so'zni tanlang:",["мой","моя́","моё"],2,"окно — o'rta jins, demak моё."]] },
+
+{ t:"Sonlar 0–10", goal:"0 dan 10 gacha sanashni o'rganasiz",
+  ex:`<p>«Bir» jinsga qarab o'zgaradi: <b>оди́н</b> дом, <b>одна́</b> кни́га, <b>одно́</b> окно́.</p>
+<p>«Ikki»: <b>два</b> (erkak/o'rta), <b>две</b> (ayol): два до́ма, две кни́ги.</p>
+<p>Telefon raqamini aytishda sonlarni ketma-ket aytasiz.</p>`,
+  w:[["ноль","nol'","0"],["оди́н","adin","1"],["два","dva","2"],["три","tri","3"],["четы́ре","chetire","4"],["пять","pyat'","5"],["шесть","shest'","6"],["семь","sem'","7"],["во́семь","vosem'","8"],["де́вять","devyat'","9"],["де́сять","desyat'","10"]],
+  d:[["A","Како́й у вас но́мер телефо́на?","Telefon raqamingiz qanaqa?"],["B","Де́вять, де́вять, во́семь, пять, три...","To'qqiz, to'qqiz, sakkiz, besh, uch..."],["A","Спаси́бо!","Rahmat!"]],
+  g:[["«Ikkita kitob»:",["два кни́ги","две кни́ги","оди́н кни́ги"],1,"кни́га — ayol jinsi, shuning uchun две."]] },
+
+{ t:"Sonlar va narx", goal:"Katta sonlar va narx so'rashni o'rganasiz",
+  ex:`<p>11–19: oxiri <b>-надцать</b>: оди́ннадцать, двена́дцать...</p>
+<p>20, 30: <b>два́дцать, три́дцать</b>. 40 — <b>со́рок</b>. 50–80: <b>-десят</b>: пятьдеся́т.</p>
+<p><b>Pul bilan:</b> 1 рубль, 2–4 рубля́, 5–20 рубле́й. Masalan: 3 рубля, 10 рублей.</p>`,
+  w:[["оди́ннадцать","adinatsat'","11"],["двена́дцать","dvenatsat'","12"],["два́дцать","dvatsat'","20"],["три́дцать","tritsat'","30"],["со́рок","sorak","40"],["пятьдеся́т","pidisyat","50"],["сто","sto","100"],["ты́сяча","tisyacha","1000"],["Ско́лько сто́ит?","skol'ka stoit","Qancha turadi?"],["рубль","rubl'","rubl"],["до́рого","doraga","qimmat"],["дёшево","dyosheva","arzon"]],
+  d:[["A","Ско́лько сто́ит хлеб?","Non qancha turadi?"],["B","Со́рок рубле́й.","Qirq rubl."],["A","А молоко́?","Sut-chi?"],["B","Сто рубле́й.","Yuz rubl."],["A","До́рого!","Qimmat!"]],
+  g:[["«5 rubl»:",["пять рубль","пять рубля́","пять рубле́й"],2,"5 dan 20 gacha — рублей."]] },
+
+{ t:"Oila", goal:"Oila a'zolari va «menda bor»",
+  ex:`<p><b>У меня́ есть...</b> — Menda ... bor. <b>У вас есть...?</b> — Sizda ... bormi?</p>
+<p>Aka ham, uka ham — <b>брат</b>. Aniqroq: <b>ста́рший брат</b> (aka), <b>мла́дший брат</b> (uka). Opa/singil — <b>сестра́</b>.</p>`,
+  w:[["семья́","sem'ya","oila"],["мать","mat'","ona"],["оте́ц","atets","ota"],["брат","brat","aka / uka"],["сестра́","sestra","opa / singil"],["сын","sin","o'g'il"],["дочь","doch'","qiz (farzand)"],["муж","mush","er"],["жена́","zhena","xotin"],["де́ти","deti","bolalar"],["У меня́ есть...","u menya yest'","Menda ... bor"]],
+  d:[["A","У вас есть де́ти?","Farzandlaringiz bormi?"],["B","Да, у меня́ есть сын и дочь.","Ha, o'g'lim va qizim bor."],["A","А брат есть?","Akangiz (ukangiz) bormi?"],["B","Да, у меня́ есть ста́рший брат.","Ha, akam bor."]],
+  g:[["«Menda opa bor»:",["У меня́ есть сестра́.","Я есть сестра́.","Меня́ сестра́ есть."],0,"«Menda bor» — У меня есть."]] },
+
+{ t:"Fe'llar (1): работать", goal:"-ать fe'llarini shaxsga qarab o'zgartirish",
+  ex:`<p>Fe'l kimga qarab o'zgaradi. <b>рабо́тать</b> (ishlamoq):</p>
+<p>я рабо́та<b>ю</b> · ты рабо́та<b>ешь</b> · он/она́ рабо́та<b>ет</b><br>мы рабо́та<b>ем</b> · вы рабо́та<b>ете</b> · они́ рабо́та<b>ют</b></p>
+<p>Xuddi shunday: <b>знать, понима́ть, чита́ть, де́лать</b>.</p>
+<p>«что» [shto] deb o'qiladi.</p>`,
+  w:[["рабо́тать","rabotat'","ishlamoq"],["знать","znat'","bilmoq"],["понима́ть","panimat'","tushunmoq"],["чита́ть","chitat'","o'qimoq"],["де́лать","delat'","qilmoq"],["Я понима́ю","ya panimayu","Men tushunaman"],["Я не понима́ю","ya ne panimayu","Men tushunmayman"],["Что вы де́лаете?","shto vi delayete","Nima qilyapsiz?"],["Повтори́те, пожа́луйста","paftarite pazhalusta","Iltimos, takrorlang"],["ме́дленно","medlenna","sekin"]],
+  d:[["A","Что вы де́лаете?","Nima qilyapsiz?"],["B","Я чита́ю.","Men o'qiyapman."],["A","Вы понима́ете по-ру́сски?","Ruschani tushunasizmi?"],["B","Немно́го. Говори́те ме́дленно, пожа́луйста.","Ozgina. Iltimos, sekin gapiring."]],
+  g:[["«Ular ishlaydi»:",["они́ рабо́тает","они́ рабо́тают","они́ рабо́таем"],1,"они → -ют: работают."],["«Sen bilasan»:",["ты зна́ешь","ты зна́ю","ты зна́ет"],0,"ты → -ешь: знаешь."]] },
+
+{ t:"Fe'llar (2): говорить", goal:"-ить fe'llari va tillar haqida gapirish",
+  ex:`<p><b>говори́ть</b> (gapirmoq):</p>
+<p>я говор<b>ю́</b> · ты говор<b>и́шь</b> · он говор<b>и́т</b><br>мы говор<b>и́м</b> · вы говор<b>и́те</b> · они́ говор<b>я́т</b></p>
+<p>Xuddi shunday: <b>звони́ть, смотре́ть, учи́ть</b>. <b>люби́ть</b> da: я люб<b>л</b>ю́.</p>
+<p><b>по-ру́сски</b> — ruscha, <b>по-узбе́кски</b> — o'zbekcha (gapirmoq).</p>`,
+  w:[["говори́ть","gavarit'","gapirmoq"],["по-ру́сски","pa-ruski","ruscha"],["по-узбе́кски","pa-uzbekski","o'zbekcha"],["звони́ть","zvanit'","qo'ng'iroq qilmoq"],["люби́ть","lyubit'","yaxshi ko'rmoq"],["Я люблю́","ya lyublyu","Men yaxshi ko'raman"],["смотре́ть","smatret'","ko'rmoq, tomosha qilmoq"],["Я учу́ ру́сский язы́к","ya uchu ruskiy yazik","Men rus tilini o'rganyapman"],["немно́го","nemnoga","ozgina"],["коне́чно","kaneshna","albatta"]],
+  d:[["A","Вы говори́те по-ру́сски?","Ruscha gapirasizmi?"],["B","Да, немно́го. Я учу́ ру́сский язы́к.","Ha, ozgina. Men rus tilini o'rganyapman."],["A","А по-узбе́кски?","O'zbekcha-chi?"],["B","Коне́чно!","Albatta!"]],
+  g:[["«Biz gapiramiz»:",["мы говори́м","мы говори́т","мы говоря́т"],0,"мы → -им: говорим."]] },
+
+{ t:"Kasb va ish", goal:"Kasbingiz va ish joyingiz haqida gapirish",
+  ex:`<p><b>Кем вы рабо́таете?</b> — Kim bo'lib ishlaysiz?</p>
+<p>Javobda kasb so'ziga <b>-ом / -ем</b> qo'shiladi: Я рабо́таю <b>водителем</b>, <b>бухгалтером</b>.</p>
+<p>Eng oson yo'l: <b>Я води́тель.</b> — Men haydovchiman.</p>
+<p>Joy: <b>в о́фисе</b> (ofisda), <b>на заво́де</b> (zavodda).</p>`,
+  w:[["Кем вы рабо́таете?","kem vi rabotayete","Kim bo'lib ishlaysiz?"],["Где вы рабо́таете?","gde vi rabotayete","Qayerda ishlaysiz?"],["учи́тель","uchitel'","o'qituvchi"],["продаве́ц","pradavets","sotuvchi"],["води́тель","vaditel'","haydovchi"],["строи́тель","straitel'","quruvchi"],["по́вар","povar","oshpaz"],["в о́фисе","v ofise","ofisda"],["на заво́де","na zavode","zavodda"],["Я рабо́таю води́телем","ya rabotayu vaditelem","Men haydovchi bo'lib ishlayman"]],
+  d:[["A","Кем вы рабо́таете?","Kim bo'lib ishlaysiz?"],["B","Я рабо́таю води́телем. А вы?","Haydovchi bo'lib ishlayman. Siz-chi?"],["A","Я бухга́лтер. Я рабо́таю в о́фисе.","Men buxgalterman. Ofisda ishlayman."]],
+  g:[["«Men quruvchiman» (oson yo'l):",["Я строи́тель.","Я строи́телем.","Меня́ строи́тель."],0,"Oddiy gap: Я + kasb."]] },
+
+{ t:"Vaqt va hafta kunlari", goal:"Soatni so'rash va kunlarni aytish",
+  ex:`<p><b>Кото́рый час?</b> — Soat necha? Javob: <b>Сейча́с три часа́.</b></p>
+<p>1 час, 2–4 часа́, 5 va undan ko'p — часо́в.</p>
+<p>«Dushanba kuni» — <b>в понеде́льник</b>, «shanba kuni» — <b>в суббо́ту</b>.</p>`,
+  w:[["Кото́рый час?","katoriy chas","Soat necha?"],["сего́дня","sevodnya","bugun"],["за́втра","zaftra","ertaga"],["вчера́","fchera","kecha"],["понеде́льник","panedel'nik","dushanba"],["вто́рник","ftornik","seshanba"],["среда́","sreda","chorshanba"],["четве́рг","chetverk","payshanba"],["пя́тница","pyatnitsa","juma"],["суббо́та","subota","shanba"],["воскресе́нье","vaskresen'ye","yakshanba"],["у́тро / ве́чер","utra / vecher","ertalab / kechqurun"]],
+  d:[["A","Кото́рый час?","Soat necha?"],["B","Сейча́с два часа́.","Hozir soat ikki."],["A","Спаси́бо. Мы рабо́таем в суббо́ту?","Rahmat. Shanba kuni ishlaymizmi?"],["B","Нет, в суббо́ту мы отдыха́ем.","Yo'q, shanba kuni dam olamiz."]],
+  g:[["«Juma» ruschasi:",["пя́тница","среда́","вто́рник"],0,"пятница — juma."]] },
+
+{ t:"Ovqat va do'kon", goal:"Do'konda kerakli narsani so'rash",
+  ex:`<p>Do'konda: <b>Да́йте, пожа́луйста, хлеб.</b> — Iltimos, non bering.</p>
+<p><b>Я хочу́...</b> — Men ... xohlayman.</p>
+<p>Ayol jinsidagi so'z «bering» bilan <b>-у</b> oladi: вода́ → да́йте <b>во́ду</b>, ры́ба → <b>ры́бу</b>. Erkak jinsi o'zgarmaydi: хлеб, чай.</p>`,
+  w:[["хлеб","khlep","non"],["вода́","vada","suv"],["мя́со","myasa","go'sht"],["ры́ба","riba","baliq"],["рис","ris","guruch"],["яйцо́","yaytso","tuxum"],["чай","chay","choy"],["Я хочу́...","ya khachu","Men ... xohlayman"],["Да́йте, пожа́луйста...","dayte pazhalusta","Iltimos, ... bering"],["Ско́лько с меня́?","skol'ka s menya","Qancha to'layman?"],["Ка́рта и́ли нали́чные?","karta ili nalichniye","Kartami yoki naqdmi?"]],
+  d:[["Sotuvchi","Здра́вствуйте! Что вы хоти́те?","Assalomu alaykum! Nima xohlaysiz?"],["Xaridor","Да́йте, пожа́луйста, хлеб и во́ду.","Iltimos, non va suv bering."],["Sotuvchi","Что ещё?","Yana nima?"],["Xaridor","Всё. Ско́лько с меня́?","Shu. Qancha to'layman?"],["Sotuvchi","Сто два́дцать рубле́й. Ка́рта и́ли нали́чные?","Bir yuz yigirma rubl. Kartami yoki naqdmi?"],["Xaridor","Ка́рта.","Karta."]],
+  g:[["«Iltimos, baliq bering»:",["Да́йте ры́ба","Да́йте ры́бу","Да́йте ры́бы"],1,"Ayol jinsi: рыба → рыбу."]] },
+
+{ t:"Ko'plik", goal:"Bir nechta narsa haqida gapirish",
+  ex:`<p>Ko'plik odatda <b>-ы / -и</b> bilan: стол → столы́, телефо́н → телефо́ны, ма́ма → ма́мы.</p>
+<p><b>к, г, х, ж, ш, ч, щ</b> dan keyin <b>-и</b>: кни́га → кни́ги, ру́чка → ру́чки.</p>
+<p>Yodlash kerak bo'lganlar: челове́к → <b>лю́ди</b>, ребёнок → <b>де́ти</b>, друг → <b>друзья́</b>, окно́ → <b>о́кна</b>.</p>`,
+  w:[["столы́","stali","stollar"],["кни́ги","knigi","kitoblar"],["маши́на","mashina","mashina"],["маши́ны","mashini","mashinalar"],["челове́к","chelavek","odam"],["лю́ди","lyudi","odamlar"],["друг","druk","do'st"],["друзья́","druz'ya","do'stlar"],["мно́го","mnoga","ko'p"],["ма́ло","mala","kam"]],
+  d:[["A","Э́то ва́ши друзья́?","Bular sizning do'stlaringizmi?"],["B","Да, э́то мои́ друзья́.","Ha, bular mening do'stlarim."],["A","Здесь мно́го люде́й!","Bu yerda odam ko'p!"],["B","Да, сего́дня пра́здник.","Ha, bugun bayram."]],
+  g:[["«ру́чка» ko'pligi:",["ру́чкы","ру́чки","ру́чкаы"],1,"«к» dan keyin -и: ручки."],["«челове́к» ko'pligi:",["челове́ки","лю́ди","челове́ка"],1,"Istisno: человек → люди."]] },
+
+{ t:"Qayerda? в / на", goal:"Joyni aytish: uyda, ishda, do'konda",
+  ex:`<p>«-da» ma'nosi uchun ikki so'z bor:</p>
+<p><b>в</b> — biror narsaning ichida: <b>в магази́не</b>, <b>в шко́ле</b>, <b>в Москве́</b>.</p>
+<p><b>на</b> — ochiq joy yoki ish: <b>на рабо́те</b>, <b>на у́лице</b>, <b>на ры́нке</b>.</p>
+<p>So'z oxiriga ko'pincha <b>-е</b> qo'shiladi. «Uyda» — <b>до́ма</b> (alohida so'z).</p>`,
+  w:[["магази́н","magazin","do'kon"],["в магази́не","v magazine","do'konda"],["ры́нок","rinak","bozor"],["на ры́нке","na rinke","bozorda"],["на рабо́те","na rabote","ishda"],["на у́лице","na ulitse","ko'chada"],["в больни́це","v bal'nitse","kasalxonada"],["до́ма","doma","uyda"],["здесь","zdes'","bu yerda"],["там","tam","u yerda"]],
+  d:[["A","Алло́! Где ты сейча́с?","Allo! Hozir qayerdasan?"],["B","Я на рабо́те. А ма́ма где?","Ishdaman. Oyim qayerda?"],["A","Ма́ма до́ма.","Oyim uyda."],["B","А па́па?","Dadam-chi?"],["A","Па́па в магази́не.","Dadam do'konda."]],
+  g:[["«Ishda»:",["в рабо́те","на рабо́те","рабо́та"],1,"Ish bilan — на: на работе."]] },
+
+{ t:"Yo'l so'rash va transport", goal:"Kerakli joyga qanday borishni so'rash",
+  ex:`<p>Murojaatni <b>Извини́те</b> (Kechirasiz) bilan boshlang.</p>
+<p><b>Как пройти́ к метро́?</b> — Metroga qanday borsam bo'ladi? (piyoda)</p>
+<p>Yo'nalishlar: <b>пря́мо</b> (to'g'riga), <b>напра́во</b> (o'ngga), <b>нале́во</b> (chapga).</p>`,
+  w:[["Извини́те","izvinite","Kechirasiz"],["Как пройти́ к...?","kak praiti k","...ga qanday borsam bo'ladi?"],["пря́мо","pryama","to'g'riga"],["напра́во","naprava","o'ngga"],["нале́во","naleva","chapga"],["далеко́","daleko","uzoq"],["бли́зко","bliska","yaqin"],["остано́вка","astanofka","bekat"],["авто́бус","aftobus","avtobus"],["Остано́вите здесь, пожа́луйста","astanavite zdes' pazhalusta","Iltimos, shu yerda to'xtating"]],
+  d:[["A","Извини́те, как пройти́ к метро́?","Kechirasiz, metroga qanday borsam bo'ladi?"],["B","Иди́те пря́мо, пото́м напра́во.","To'g'riga yuring, keyin o'ngga."],["A","Э́то далеко́?","Uzoqmi?"],["B","Нет, бли́зко. Пять мину́т.","Yo'q, yaqin. Besh daqiqa."],["A","Спаси́бо!","Rahmat!"]],
+  g:[["«Chapga»:",["напра́во","нале́во","пря́мо"],1,"налево — chapga."]] },
+
+{ t:"O'tgan zamon", goal:"Kecha nima qilganingizni aytish",
+  ex:`<p>O'tgan zamon oson: fe'ldan <b>-ть</b> ni olib, <b>-л</b> qo'shasiz.</p>
+<p><b>Erkak:</b> он рабо́та<b>л</b> · <b>Ayol:</b> она́ рабо́та<b>ла</b> · <b>Ko'plik:</b> они́ рабо́та<b>ли</b></p>
+<p>Shaxsga emas, <b>jinsga</b> qarab o'zgaradi: erkak «я был», ayol «я была́».</p>`,
+  w:[["был","bil","edi (erkak)"],["была́","bila","edi (ayol)"],["бы́ли","bili","edilar"],["рабо́тал","rabotal","ishladi"],["де́лал","delal","qildi"],["ви́дел","videl","ko'rdi"],["купи́л","kupil","sotib oldi"],["вчера́","fchera","kecha"],["ра́ньше","ran'she","oldin"]],
+  d:[["A","Где ты был вчера́?","Kecha qayerda eding?"],["B","Вчера́ я был на ры́нке. Я купи́л мя́со и рис.","Kecha bozorda edim. Go'sht va guruch oldim."],["A","А что де́лала твоя́ жена́?","Xotining nima qildi?"],["B","Она́ рабо́тала.","U ishladi."]],
+  g:[["Ayol aytadi: «Men ishda edim»",["Я был на рабо́те.","Я была́ на рабо́те.","Я бы́ли на рабо́те."],1,"Ayol — была."]] },
+
+{ t:"Kelasi zamon", goal:"Rejalaringiz haqida gapirish",
+  ex:`<p>Kelasi zamon: <b>бу́ду</b> + fe'l.</p>
+<p>я бу́ду · ты бу́дешь · он бу́дет · мы бу́дем · вы бу́дете · они́ бу́дут</p>
+<p><b>За́втра я бу́ду рабо́тать.</b> — Ertaga ishlayman.</p>
+<p><b>че́рез час</b> — bir soatdan keyin.</p>`,
+  w:[["бу́ду","budu","bo'laman / qilaman"],["бу́дешь","budesh'","bo'lasan"],["бу́дет","budet","bo'ladi"],["за́втра","zaftra","ertaga"],["пото́м","patom","keyin"],["ско́ро","skora","tez orada"],["че́рез час","cheres chas","bir soatdan keyin"],["отдыха́ть","atdikhat'","dam olmoq"],["когда́","kagda","qachon"]],
+  d:[["A","Что ты бу́дешь де́лать за́втра?","Ertaga nima qilasan?"],["B","За́втра я бу́ду рабо́тать. А в воскресе́нье бу́ду отдыха́ть.","Ertaga ishlayman. Yakshanba kuni dam olaman."],["A","А когда́ ты бу́дешь до́ма?","Uyda qachon bo'lasan?"],["B","Че́рез час.","Bir soatdan keyin."]],
+  g:[["«Biz dam olamiz» (kelasi zamon):",["мы бу́дем отдыха́ть","мы бу́дут отдыха́ть","мы бу́ду отдыха́ть"],0,"мы → будем."]] },
+
+{ t:"Salomatlik", goal:"Shifokorga nima og'riyotganini aytish",
+  ex:`<p><b>У меня́ боли́т голова́.</b> — Boshim og'riyapti.</p>
+<p>Ko'p bo'lsa: <b>У меня́ боля́т зу́бы.</b> — Tishlarim og'riyapti.</p>
+<p>Shoshilinch: <b>Вы́зовите ско́рую!</b> — Tez yordam chaqiring! (Rossiyada raqam: 103 yoki 112)</p>`,
+  w:[["У меня́ боли́т...","u menya balit","Mening ...im og'riyapti"],["голова́","galava","bosh"],["живо́т","zhivot","qorin"],["зуб","zup","tish"],["го́рло","gorla","tomoq"],["температу́ра","temperatura","harorat, isitma"],["апте́ка","apteka","dorixona"],["лека́рство","lekarstva","dori"],["Мне пло́хо","mne plokha","Ahvolim yomon"],["Вы́зовите ско́рую!","vizavite skoruyu","Tez yordam chaqiring!"]],
+  d:[["Shifokor","Что у вас боли́т?","Sizda nima og'riyapti?"],["Bemor","У меня́ боли́т голова́ и го́рло.","Boshim va tomog'im og'riyapti."],["Shifokor","Температу́ра есть?","Isitmangiz bormi?"],["Bemor","Да, три́дцать во́семь.","Ha, o'ttiz sakkiz."],["Shifokor","Вот лека́рство. Пе́йте три ра́за в день.","Mana dori. Kuniga uch marta iching."]],
+  g:[["«Qornim og'riyapti»:",["У меня́ боли́т живо́т.","Я боли́т живо́т.","У меня́ живо́т есть."],0,"У меня болит + a'zo."]] },
+
+{ t:"Telefonda gaplashish", goal:"Telefonda qo'ng'iroq qilish va javob berish",
+  ex:`<p>Telefonda <b>Алло́!</b> deb javob beriladi.</p>
+<p>Biror odamni so'rash: <b>Мо́жно поговори́ть с Ахма́дом?</b> — Ahmad bilan gaplashsam bo'ladimi?</p>
+<p>Eshitilmasa: <b>Вас пло́хо слы́шно.</b> — Sizni yomon eshityapman.</p>`,
+  w:[["Алло́!","allo","Allo!"],["Мо́жно поговори́ть с...?","mozhna pagavarit' s","... bilan gaplashsam bo'ladimi?"],["Кто э́то?","kto eta","Bu kim?"],["Э́то Алише́р","eta alisher","Bu Alisher"],["Подожди́те","padazhdite","Kuting"],["Перезвони́те","perezvanite","Qayta qo'ng'iroq qiling"],["Я перезвоню́","ya perezvanyu","Men qayta qo'ng'iroq qilaman"],["Вас пло́хо слы́шно","vas plokha slishna","Sizni yomon eshityapman"],["но́мер","nomer","raqam"]],
+  d:[["A","Алло́!","Allo!"],["B","Алло́, здра́вствуйте! Мо́жно поговори́ть с Ахма́дом?","Allo, assalomu alaykum! Ahmad bilan gaplashsam bo'ladimi?"],["A","Его́ сейча́с нет. Перезвони́те че́рез час.","U hozir yo'q. Bir soatdan keyin qayta qo'ng'iroq qiling."],["B","Хорошо́, спаси́бо.","Yaxshi, rahmat."]],
+  g:[["«Men qayta qo'ng'iroq qilaman»:",["Перезвони́те","Я перезвоню́","Подожди́те"],1,"Я перезвоню — men qayta qo'ng'iroq qilaman."]] },
+
+{ t:"Kvartira ijarasi", goal:"Kvartira so'rash va narxini bilish",
+  ex:`<p><b>снять кварти́ру</b> — kvartirani ijaraga olmoq.</p>
+<p>Narx: <b>Ско́лько сто́ит в ме́сяц?</b> — Oyiga qancha turadi?</p>
+<p>Ko'rish uchun: <b>Мо́жно посмотре́ть?</b> — Ko'rsam bo'ladimi?</p>`,
+  w:[["кварти́ра","kvartira","kvartira"],["ко́мната","komnata","xona"],["снять кварти́ру","snyat' kvartiru","kvartira ijaraga olmoq"],["хозя́ин","khazyain","uy egasi"],["в ме́сяц","v mesyats","oyiga"],["зало́г","zalok","garov puli"],["ку́хня","kukhnya","oshxona"],["Кварти́ра свобо́дна?","kvartira svabodna","Kvartira bo'shmi?"],["Мо́жно посмотре́ть?","mozhna pasmatret'","Ko'rsam bo'ladimi?"]],
+  d:[["A","Здра́вствуйте! Кварти́ра свобо́дна?","Assalomu alaykum! Kvartira bo'shmi?"],["B","Да, свобо́дна.","Ha, bo'sh."],["A","Ско́лько сто́ит в ме́сяц?","Oyiga qancha turadi?"],["B","Три́дцать ты́сяч рубле́й.","O'ttiz ming rubl."],["A","Мо́жно посмотре́ть?","Ko'rsam bo'ladimi?"],["B","Коне́чно, приходи́те за́втра.","Albatta, ertaga keling."]],
+  g:[["«Oyiga qancha?»:",["Ско́лько сто́ит в ме́сяц?","Где в ме́сяц?","Когда́ ме́сяц?"],0,"Сколько стоит — qancha turadi."]] },
+
+{ t:"Yoqadi, sovuq, issiq", goal:"His-tuyg'u va fikringizni aytish",
+  ex:`<p><b>Мне нра́вится</b> — menga yoqadi (bitta narsa). Ko'p narsa bo'lsa — <b>нра́вятся</b>.</p>
+<p>His-holatda «men» emas, <b>мне</b> ishlatiladi: <b>Мне хо́лодно</b> — Men sovqotyapman, <b>Мне ску́чно</b> — Zerikyapman.</p>
+<p>«Sizga» — <b>вам</b>, «senga» — <b>тебе́</b>: Тебе́ нра́вится?</p>`,
+  w:[["Мне нра́вится","mne nravitsa","Menga yoqadi"],["Мне не нра́вится","mne ne nravitsa","Menga yoqmaydi"],["хо́лодно","kholadna","sovuq"],["жа́рко","zharka","issiq"],["ску́чно","skuchna","zerikarli"],["ве́село","vesela","quvnoq"],["вку́сно","fkusna","mazali"],["краси́во","krasiva","chiroyli"],["о́чень","ochen'","juda"]],
+  d:[["A","Тебе́ нра́вится Москва́?","Moskva senga yoqadimi?"],["B","Да, о́чень нра́вится. Здесь краси́во.","Ha, juda yoqadi. Bu yer chiroyli."],["B","Но зимо́й хо́лодно!","Lekin qishda sovuq!"],["A","Да, мне то́же хо́лодно.","Ha, men ham sovqotaman."]],
+  g:[["«Men sovqotyapman»:",["Я хо́лодно.","Мне хо́лодно.","Меня́ хо́лодно."],1,"His-holatda — мне."]] },
+
+{ t:"Mumkin, mumkin emas, kerak", goal:"Ruxsat so'rash va kerakligini aytish",
+  ex:`<p><b>мо́жно</b> — mumkin, <b>нельзя́</b> — mumkin emas, <b>на́до / ну́жно</b> — kerak.</p>
+<p><b>Мо́жно войти́?</b> — Kirsam bo'ladimi?</p>
+<p><b>Мне на́до рабо́тать.</b> — Men ishlashim kerak.</p>`,
+  w:[["мо́жно","mozhna","mumkin"],["нельзя́","nel'zya","mumkin emas"],["на́до","nada","kerak"],["ну́жно","nuzhna","kerak"],["Мо́жно войти́?","mozhna vaiti","Kirsam bo'ladimi?"],["Мо́жно вопро́с?","mozhna vapros","Savol bersam bo'ladimi?"],["Здесь нельзя́ кури́ть","zdes' nel'zya kurit'","Bu yerda chekish mumkin emas"],["Мне на́до идти́","mne nada itti","Men ketishim kerak"],["Помоги́те!","pamagite","Yordam bering!"]],
+  d:[["A","Мо́жно войти́?","Kirsam bo'ladimi?"],["B","Да, коне́чно.","Ha, albatta."],["A","Мо́жно вопро́с? Где здесь туале́т?","Savol bersam maylimi? Bu yerda hojatxona qayerda?"],["B","Пря́мо и нале́во.","To'g'riga va chapga."],["A","Спаси́бо. Ой, мне на́до идти́!","Rahmat. Voy, men ketishim kerak!"]],
+  g:[["«Bu yerda mumkin emas»:",["Здесь мо́жно.","Здесь нельзя́.","Здесь на́до."],1,"нельзя — mumkin emas."]] },
+
+{ t:"Savol so'zlari", goal:"Har xil savol berishni o'rganasiz",
+  ex:`<p><b>Где?</b> — qayerda (joy): Я <b>в магази́не</b>.</p>
+<p><b>Куда́?</b> — qayerga (yo'nalish): Я иду́ <b>в магази́н</b>.</p>
+<p><b>Почему́?</b> — nega? Javob: <b>Потому́ что...</b> — chunki...</p>`,
+  w:[["кто","kto","kim"],["что","shto","nima"],["где","gde","qayerda"],["куда́","kuda","qayerga"],["когда́","kagda","qachon"],["почему́","pachemu","nega"],["как","kak","qanday"],["ско́лько","skol'ka","qancha"],["како́й","kakoy","qanaqa"],["потому́ что","patamu shta","chunki"]],
+  d:[["A","Куда́ ты идёшь?","Qayerga ketyapsan?"],["B","В магази́н.","Do'konga."],["A","Почему́?","Nega?"],["B","Потому́ что до́ма нет хле́ба.","Chunki uyda non yo'q."],["A","Когда́ ты бу́дешь до́ма?","Uyda qachon bo'lasan?"],["B","Че́рез полчаса́.","Yarim soatdan keyin."]],
+  g:[["«Qayerga ketyapsan?»:",["Где ты идёшь?","Куда́ ты идёшь?","Когда́ ты идёшь?"],1,"Yo'nalish — куда."]] },
+
+{ t:"O'zim haqimda", goal:"O'zingiz haqingizda 1 daqiqa gapirasiz",
+  ex:`<p>Endi o'zingiz haqingizda gapirasiz. Mana shablon:</p>
+<p><b>Меня́ зову́т</b> ... <b>Мне</b> ... <b>лет.</b> <b>Я из</b> ... <b>Я живу́ в</b> ... <b>Я рабо́таю</b> ... <b>У меня́ есть</b> ... <b>Я люблю́</b> ...</p>
+<p><b>Yosh:</b> 1 год, 2–4 го́да, 5 va undan ko'p — лет: <b>Мне три́дцать лет.</b> (21 год, 22 го́да ham bor.)</p>`,
+  w:[["Мне ... лет","mne ... let","Men ... yoshdaman"],["Я жена́т","ya zhenat","Uylanganman (erkak)"],["Я за́мужем","ya zamuzhem","Turmushga chiqqanman (ayol)"],["В свобо́дное вре́мя я...","f svabodnaye vremya ya","Bo'sh vaqtimda men..."],["футбо́л","futbol","futbol"],["Я хочу́ вы́учить ру́сский","ya khachu viuchit' ruskiy","Men rus tilini o'rganib olmoqchiman"],["мечта́","mechta","orzu"],["сейча́с","sichas","hozir"]],
+  d:[["Men","Меня́ зову́т Алише́р. Мне три́дцать лет.","Mening ismim Alisher. O'ttiz yoshdaman."],["Men","Я из Узбекиста́на, из Самарка́нда.","Men O'zbekistondanman, Samarqanddan."],["Men","Сейча́с я живу́ в Москве́ и рабо́таю води́телем.","Hozir Moskvada yashayman va haydovchi bo'lib ishlayman."],["Men","Я жена́т, у меня́ есть сын.","Uylanganman, o'g'lim bor."],["Men","В свобо́дное вре́мя я смотрю́ футбо́л.","Bo'sh vaqtimda futbol ko'raman."]],
+  g:[["«Men 25 yoshdaman»:",["Я два́дцать пять лет.","Мне два́дцать пять лет.","У меня́ два́дцать пять."],1,"Yosh — Мне ... лет."]] },
+
+{ t:"Kiyim do'konida", goal:"Kiyim tanlash, kiyib ko'rish va savdolashish",
+  ex:`<p><b>Мо́жно поме́рить?</b> — Kiyib ko'rsam bo'ladimi?</p>
+<p>O'lcham: <b>Есть разме́р бо́льше / ме́ньше?</b> — Kattaroq / kichikroq bormi?</p>
+<p>Savdolashish: <b>Мо́жно деше́вле?</b> — Arzonroq bo'ladimi? (bozorda ishlaydi, katta do'konda emas)</p>`,
+  w:[["Ско́лько э́то сто́ит?","skol'ka eta stoit","Bu qancha turadi?"],["Мо́жно поме́рить?","mozhna pamerit'","Kiyib ko'rsam bo'ladimi?"],["разме́р","razmer","o'lcham"],["бо́льше","bol'she","kattaroq"],["ме́ньше","men'she","kichikroq"],["Мо́жно деше́вле?","mozhna deshevle","Arzonroq bo'ladimi?"],["Я возьму́","ya vaz'mu","Olaman"],["ку́ртка","kurtka","kurtka"],["ски́дка","skitka","chegirma"],["сда́ча","zdacha","qaytim"]],
+  d:[["Xaridor","Ско́лько сто́ит э́та ку́ртка?","Bu kurtka qancha turadi?"],["Sotuvchi","Три ты́сячи рубле́й.","Uch ming rubl."],["Xaridor","Мо́жно поме́рить?","Kiyib ko'rsam bo'ladimi?"],["Sotuvchi","Коне́чно.","Albatta."],["Xaridor","Есть разме́р бо́льше?","Kattaroq o'lcham bormi?"],["Sotuvchi","Да, вот.","Ha, mana."],["Xaridor","Мо́жно деше́вле?","Arzonroq bo'ladimi?"],["Sotuvchi","Хорошо́, две ты́сячи восемьсо́т.","Yaxshi, ikki ming sakkiz yuz."],["Xaridor","Я возьму́.","Olaman."]],
+  g:[["«Kichikroq o'lcham bormi?»:",["Есть разме́р бо́льше?","Есть разме́р ме́ньше?","Есть ски́дка?"],1,"меньше — kichikroq."]] },
+
+{ t:"Ishda", goal:"Boshliq va hamkasblar bilan gaplashish",
+  ex:`<p>Kechiksangiz: <b>Извини́те за опозда́ние.</b> — Kechikkanim uchun uzr.</p>
+<p>Ish vaqti: <b>до шести́</b> — oltigacha, <b>с девяти́</b> — to'qqizdan.</p>
+<p>Dam olish kuni: <b>выходно́й</b>. Ta'til: <b>о́тпуск</b>.</p>`,
+  w:[["нача́льник","nachal'nik","boshliq"],["колле́га","kallega","hamkasb"],["зарпла́та","zarplata","maosh"],["выходно́й","vikhadnoy","dam olish kuni"],["о́тпуск","otpusk","ta'til"],["Я опозда́л","ya apazdal","Kechikdim (erkak)"],["Извини́те за опозда́ние","izvinite za apazdaniye","Kechikkanim uchun uzr"],["Поня́тно","panyatna","Tushunarli"],["догово́р","dagavor","shartnoma"]],
+  d:[["Boshliq","Почему́ вы опозда́ли?","Nega kechikdingiz?"],["Ishchi","Извини́те за опозда́ние. Авто́бус не пришёл.","Kechikkanim uchun uzr. Avtobus kelmadi."],["Boshliq","Хорошо́. Сего́дня на́до рабо́тать до шести́.","Yaxshi. Bugun oltigacha ishlash kerak."],["Ishchi","Поня́тно. А когда́ у меня́ выходно́й?","Tushunarli. Mening dam olish kunim qachon?"],["Boshliq","В воскресе́нье.","Yakshanba kuni."]],
+  g:[["«Maosh» ruschasi:",["о́тпуск","зарпла́та","догово́р"],1,"зарплата — maosh."]] },
+
+{ t:"Bank va pochta", goal:"Pul o'tkazish va hujjat to'ldirish",
+  ex:`<p><b>Я хочу́ перевести́ де́ньги.</b> — Pul o'tkazmoqchiman.</p>
+<p><b>Запо́лните бланк.</b> — Blankani to'ldiring. <b>Где ну́жно подписа́ть?</b> — Qayerga imzo qo'yish kerak?</p>
+<p>Shaxsiy raqamlaringizni (karta, pasport) notanish odamga aytmang.</p>`,
+  w:[["банк","bank","bank"],["де́ньги","den'gi","pul"],["перевести́ де́ньги","perevesti den'gi","pul o'tkazmoq"],["снять де́ньги","snyat' den'gi","pul yechmoq"],["банкома́т","bankamat","bankomat"],["па́спорт","pasport","pasport"],["бланк","blank","blanka"],["запо́лнить","zapolnit'","to'ldirmoq"],["подписа́ть","padpisat'","imzolamoq"],["Где ну́жно подписа́ть?","gde nuzhna padpisat'","Qayerga imzo qo'yish kerak?"]],
+  d:[["Mijoz","Здра́вствуйте, я хочу́ перевести́ де́ньги.","Assalomu alaykum, pul o'tkazmoqchiman."],["Xodim","Ваш па́спорт, пожа́луйста.","Pasportingizni bering, iltimos."],["Mijoz","Вот.","Mana."],["Xodim","Запо́лните бланк.","Blankani to'ldiring."],["Mijoz","Где ну́жно подписа́ть?","Qayerga imzo qo'yish kerak?"],["Xodim","Вот здесь.","Mana shu yerga."]],
+  g:[["«Pul yechmoq»:",["перевести́ де́ньги","снять де́ньги","запо́лнить де́ньги"],1,"снять деньги — pul yechmoq."]] },
+
+{ t:"Kafe va restoran", goal:"Ovqat buyurtma qilish va hisob so'rash",
+  ex:`<p>Buyurtma: <b>Я бу́ду плов и чай.</b> — Men palov va choy olaman.</p>
+<p>Maslahat so'rash: <b>Что вы посове́туете?</b> — Nima tavsiya qilasiz?</p>
+<p>Oxirida: <b>Счёт, пожа́луйста.</b> — Hisobni keltiring.</p>`,
+  w:[["меню́","menyu","menyu"],["официа́нт","afitsiant","ofitsiant"],["Что вы посове́туете?","shto vi pasavetuyete","Nima tavsiya qilasiz?"],["Я бу́ду...","ya budu","Men ... olaman"],["суп","sup","sho'rva"],["сала́т","salat","salat"],["без мя́са","bez myasa","go'shtsiz"],["о́стрый","ostriy","achchiq"],["Счёт, пожа́луйста","shchyot pazhalusta","Hisobni keltiring"],["Прия́тного аппети́та!","priyatnava apetita","Yoqimli ishtaha!"]],
+  d:[["Ofitsiant","До́брый ве́чер! Вот меню́.","Xayrli kech! Mana menyu."],["Mehmon","Спаси́бо. Что вы посове́туете?","Rahmat. Nima tavsiya qilasiz?"],["Ofitsiant","Суп и плов.","Sho'rva va palov."],["Mehmon","Я бу́ду плов и чай.","Men palov va choy olaman."],["Ofitsiant","Прия́тного аппети́та!","Yoqimli ishtaha!"],["Mehmon","Счёт, пожа́луйста.","Hisobni keltiring."]],
+  g:[["«Hisobni keltiring»:",["Меню́, пожа́луйста.","Счёт, пожа́луйста.","Я бу́ду счёт."],1,"Счёт — hisob."]] },
+
+{ t:"Yakuniy suhbat", goal:"Hamma o'rganganlaringizni bitta suhbatda ishlatasiz",
+  ex:`<p><b>Tabriklaymiz!</b> Siz kursning oxirgi darsiga yetdingiz. 🎉</p>
+<p>Bu darsda yangi qo'shnining bilan tanishasiz: salomlashish, tanishuv, ish, oila, reja — hammasi bitta suhbatda.</p>
+<p>Testda <b>barcha darslardagi</b> so'zlar aralash chiqadi. Keyin har kuni <b>«Takrorlash»</b> tugmasi orqali mashq qilib turing.</p>`,
+  w:[["сосе́д","sased","qo'shni (erkak)"],["сосе́дка","sasetka","qo'shni (ayol)"],["Добро́ пожа́ловать!","dabro pazhalavat'","Xush kelibsiz!"],["Заходи́те в го́сти","zakhadite v gosti","Mehmonga keling"],["С удово́льствием","s udavol'stviyem","Bajonidil"],["Бу́дем знако́мы","budem znakomi","Tanishib qo'yaylik"],["Уда́чи!","udachi","Omad!"]],
+  d:[["Qo'shni","Здра́вствуйте! Вы наш но́вый сосе́д?","Assalomu alaykum! Siz yangi qo'shnimizmisiz?"],["Siz","Да. Меня́ зову́т Алише́р. Бу́дем знако́мы!","Ha. Mening ismim Alisher. Tanishib qo'yaylik!"],["Qo'shni","О́чень прия́тно, я Ни́на. Отку́да вы?","Juda xursandman, men Nina. Qayerdansiz?"],["Siz","Я из Узбекиста́на. Я рабо́таю бухга́лтером.","O'zbekistondanman. Buxgalter bo'lib ishlayman."],["Qo'shni","У вас есть де́ти?","Farzandlaringiz bormi?"],["Siz","Да, сын. За́втра он то́же бу́дет здесь.","Ha, o'g'lim. Ertaga u ham shu yerda bo'ladi."],["Qo'shni","Добро́ пожа́ловать! Заходи́те в го́сти.","Xush kelibsiz! Mehmonga kiring."],["Siz","Спаси́бо, с удово́льствием!","Rahmat, bajonidil!"]],
+  g:[] }
+];
+
+</script>
+<script>
+// ===== Saqlash =====
+const LS = {
+  get(k, d){ try { const v = localStorage.getItem("ru_"+k); return v===null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem("ru_"+k, JSON.stringify(v)); } catch(e){} }
+};
+let S = LS.get("state", null) || { pace:null, done:[], days:[] };  // done: [{i, date}], days: faol kunlar
+function save(){ LS.set("state", S); }
+
+// ===== Sana =====
+function today(){ const d = new Date(Date.now() + (LS.get("dayOffset",0))*86400000); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function dayDiff(a, b){ return Math.round((new Date(b+"T12:00:00") - new Date(a+"T12:00:00"))/86400000); }
+function markActive(){ const t = today(); if (!S.days.includes(t)) { S.days.push(t); save(); } }
+function streak(){
+  const set = new Set(S.days); let n = 0; let d = today();
+  if (!set.has(d)) { d = shift(d,-1); if (!set.has(d)) return 0; }
+  while (set.has(d)) { n++; d = shift(d,-1); }
+  return n;
+}
+function shift(s, k){ const d = new Date(s+"T12:00:00"); d.setDate(d.getDate()+k); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+
+const PACES = {
+  slow:   { name:"Sekin",   per:"2 kunda 1 dars", total:"≈ 60 kun", mins:"kuniga 10–15 daqiqa" },
+  normal: { name:"O'rtacha", per:"kuniga 1 dars",  total:"30 kun",   mins:"kuniga 20–25 daqiqa" },
+  fast:   { name:"Tez",     per:"kuniga 2 dars",  total:"15 kun",   mins:"kuniga 40–50 daqiqa" }
+};
+function doneToday(){ const t = today(); return S.done.filter(x=>x.date===t).length; }
+function canStartNew(){
+  if (S.done.length >= LESSONS.length) return false;
+  if (S.pace === "fast") return doneToday() < 2;
+  if (S.pace === "normal") return doneToday() < 1;
+  if (!S.done.length) return true;
+  const last = S.done[S.done.length-1].date;
+  return dayDiff(last, today()) >= 2;
+}
+function nextWhen(){
+  if (S.pace !== "slow") return "ertaga";
+  const last = S.done[S.done.length-1].date;
+  const left = 2 - dayDiff(last, today());
+  return left <= 1 ? "ertaga" : "indinga";
+}
+
+// ===== Ovoz (rus tili) =====
+let ruVoice = null;
+function pickVoice(){ const v = speechSynthesis.getVoices(); ruVoice = v.find(x=>/^ru/i.test(x.lang)) || null; }
+if ("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+const clean = s => s.replace(/́/g,"").replace(/\.\.\./g,"");
+function say(text, onend){
+  if (!("speechSynthesis" in window)) { if (onend) onend(); return; }
+  const u = new SpeechSynthesisUtterance(clean(text));
+  u.lang = ruVoice ? ruVoice.lang : "ru-RU"; if (ruVoice) u.voice = ruVoice; u.rate = 0.8;
+  if (onend) u.onend = onend;
+  speechSynthesis.speak(u);
+}
+function sayNow(t){ if ("speechSynthesis" in window) speechSynthesis.cancel(); say(t); }
+
+const app = document.getElementById("app");
+const shuffle = a => { for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+let screen = "home", L = null, step = 0, stepList = [];
+
+// ===== Ekranlar =====
+function render(){
+  if (!S.pace) return renderSetup();
+  if (screen === "lesson") return renderStep();
+  if (screen === "settings") return renderSettings();
+  return renderHome();
+}
+
+function paceButtons(){
+  return Object.entries(PACES).map(([k,p])=>`<button class="pace ${S.pace===k?'on':''}" data-p="${k}"><b>${p.name}</b> — ${p.per}<br><span class="muted">${p.total} · ${p.mins}</span></button>`).join("");
+}
+function renderSetup(){
+  app.innerHTML = `<div class="box"><h2>👋 Xush kelibsiz!</h2>
+    <p>Bu kurs rus tilini <b>noldan oddiy suhbat darajasigacha</b> o'rgatadi. Jami <b>30 ta dars</b>, har bir dars aniq tartib bilan boradi.</p>
+    <p><b>Kuniga qancha vaqt ajrata olasiz?</b> O'zingiz tanlang — keyin ⚙️ orqali o'zgartirsa bo'ladi.</p>
+    <div class="paces">${paceButtons()}</div></div>`;
+  app.querySelectorAll(".pace").forEach(b=>b.onclick=()=>{ S.pace = b.dataset.p; save(); screen="home"; render(); });
+}
+
+function renderHome(){
+  const n = S.done.length, total = LESSONS.length, finished = n >= total;
+  const can = canStartNew();
+  const p = PACES[S.pace];
+  let plan;
+  if (finished){
+    plan = `<h2>🏆 Kurs tugadi!</h2><p>Siz 30 ta darsning hammasini o'tdingiz. Endi har kuni <b>Takrorlash</b> qiling va ruscha gaplashishga harakat qiling.</p>
+      <button class="big" id="revBtn">🔁 Takrorlash</button>`;
+  } else if (can){
+    const l = LESSONS[n];
+    plan = `<h2>📅 Bugungi reja</h2>
+      <p><b>${n+1}-dars: ${l.t}</b><br><span class="muted">${l.goal}</span></p>
+      <ol class="plan">${n>0?'<li>🔁 Takrorlash — kechagi so\'zlar (3 daq)</li>':''}
+        <li>📖 Qoida — o'zbekcha tushuntirish (5 daq)</li>
+        <li>🗂️ Yangi so'zlar — eshitish va takrorlash (5 daq)</li>
+        <li>💬 Suhbat — tinglash (3 daq)</li>
+        <li>✅ Mashq — test (4 daq)</li>
+        <li>🗣️ Gapirish — ovoz chiqarib aytish (3 daq)</li></ol>
+      <button class="big" id="startBtn">▶ Boshlash</button>`;
+  } else {
+    plan = `<h2>✅ Bugungi reja bajarildi!</h2>
+      <p>Barakalla! Keyingi dars <b>${nextWhen()}</b> ochiladi. Tezlik: <b>${p.name}</b> (${p.per}).</p>
+      <p class="muted">Bugun yana mashq qilmoqchi bo'lsangiz — o'rgangan so'zlaringizni takrorlang.</p>
+      <button class="big sec" id="revBtn">🔁 Takrorlash</button>`;
+  }
+  const list = LESSONS.map((l,i)=>{
+    const done = i < n, cur = i === n && can;
+    const cls = done ? "done click" : cur ? "cur click" : "lock";
+    const icon = done ? "✓" : (i+1);
+    const tail = done ? "" : cur ? " ▶" : " 🔒";
+    return `<div class="lrow ${cls}" data-i="${i}"><div class="n">${icon}</div><div>${i+1}. ${l.t}${tail}</div></div>`;
+  }).join("");
+  app.innerHTML = `
+    <div class="box"><div class="stats">
+      <div class="stat"><b>${n}/${total}</b><span class="muted">dars</span></div>
+      <div class="stat"><b>🔥 ${streak()}</b><span class="muted">kun ketma-ket</span></div>
+      <div class="stat"><b>${p.name}</b><span class="muted">${p.per}</span></div></div>
+      <div class="bar"><i style="width:${Math.round(n/total*100)}%"></i></div></div>
+    <div class="box" id="plan">${plan}</div>
+    <div class="box" id="lessonList"><h2>📚 Darslar</h2><div class="muted" style="margin-bottom:6px">O'tilgan darslarni (✓) qayta ochib, takrorlashingiz mumkin.</div>${list}</div>`;
+  const sb = document.getElementById("startBtn"); if (sb) sb.onclick = ()=>openLesson(n, true);
+  const rb = document.getElementById("revBtn"); if (rb) rb.onclick = openReview;
+  app.querySelectorAll(".lrow.done").forEach(r=>r.onclick=()=>openLesson(+r.dataset.i, false));
+  const cr = app.querySelector(".lrow.cur"); if (cr) cr.onclick = ()=>openLesson(n, true);
+  if (!can && !finished) setTimeout(()=>maybeTour("locked"), 150);
+}
+
+function renderSettings(){
+  app.innerHTML = `<div class="box"><h2>⚙️ Sozlamalar</h2>
+    <p><b>Tezlik</b> — kuniga nechta dars ochilsin:</p><div class="paces">${paceButtons()}</div>
+    <button class="big sec" id="backHome">⬅ Orqaga</button></div>
+    <div class="box"><h2>Qaytadan boshlash</h2><p class="muted">Barcha natijalar o'chadi va kurs 1-darsdan boshlanadi.</p>
+    <button class="big sec" id="resetBtn">Kursni qaytadan boshlash</button><div id="resetAsk"></div></div>`;
+  app.querySelectorAll(".pace").forEach(b=>b.onclick=()=>{ S.pace=b.dataset.p; save(); renderSettings(); });
+  document.getElementById("backHome").onclick = ()=>{ screen="home"; render(); };
+  document.getElementById("resetBtn").onclick = ()=>{
+    document.getElementById("resetAsk").innerHTML = `<p><b>Rostdan ham hammasini o'chirasizmi?</b></p><button class="big" id="resetYes">Ha, o'chirish</button>`;
+    document.getElementById("resetYes").onclick = ()=>{ S = { pace:S.pace, done:[], days:[] }; save(); screen="home"; render(); };
+  };
+}
+
+// ===== Dars =====
+let isNew = false, reviewMode = false;
+function openLesson(i, fresh){
+  L = LESSONS[i]; L.idx = i; isNew = fresh; reviewMode = false;
+  stepList = (fresh && i > 0 ? ["review"] : []).concat(["explain","words","dialog","quiz","speak","finish"]);
+  step = 0; QS = []; qi = 0; screen = "lesson"; markActive(); render(); window.scrollTo(0,0);
+}
+function openReview(){
+  L = null; reviewMode = true; isNew = false; stepList = ["review","finish"]; step = 0; QS = []; qi = 0; screen = "lesson"; markActive(); render();
+}
+function learnedWords(){
+  const n = Math.max(S.done.length, 1);
+  return LESSONS.slice(0, n).flatMap(l=>l.w);
+}
+function nextStep(){ step++; render(); window.scrollTo(0,0); }
+
+const STEP_NAMES = { review:"🔁 Takrorlash", explain:"📖 Qoida", words:"🗂️ Yangi so'zlar", dialog:"💬 Suhbat", quiz:"✅ Mashq", speak:"🗣️ Gapirish", finish:"🎉 Yakun" };
+function head(){
+  const dots = stepList.map((s,i)=>`<i class="${i<=step?'on':''}"></i>`).join("");
+  const title = reviewMode ? "Takrorlash" : `${L.idx+1}-dars: ${L.t}`;
+  return `<div class="steps">${dots}</div><div class="muted" style="display:flex;justify-content:space-between"><span>${title}</span><a href="#" id="exitL" style="color:#c0392b">✕ Chiqish</a></div><h2>${STEP_NAMES[stepList[step]]}</h2>`;
+}
+function nextBtn(label, hidden){ return `<button class="big" id="nextBtn" ${hidden?'style="display:none"':''}>${label||"Keyingi ➜"}</button>`; }
+
+document.addEventListener("click", e=>{ if (e.target && e.target.id === "exitL"){ e.preventDefault(); QS=[]; qi=0; screen="home"; render(); window.scrollTo(0,0); } });
+function renderStep(){
+  const s = stepList[step];
+  if (s === "explain"){
+    app.innerHTML = `<div class="box">${head()}<p><b>🎯 ${L.goal}</b></p><div class="lex">${L.ex}</div>${nextBtn()}</div>`;
+  }
+  if (s === "words"){
+    app.innerHTML = `<div class="box">${head()}<p class="muted">So'zni bosing — ruscha eshitasiz. Har birini ovoz chiqarib 2 marta takrorlang.</p>
+      <div class="grid">${L.w.map((w,i)=>`<div class="card" data-i="${i}"><div class="ru">${w[0]}</div><div class="tr">[${w[1]}]</div><div class="uz">${w[2]}</div></div>`).join("")}</div>${nextBtn()}</div>`;
+    app.querySelectorAll(".card").forEach(c=>c.onclick=()=>sayNow(L.w[c.dataset.i][0]));
+  }
+  if (s === "dialog"){
+    app.innerHTML = `<div class="box">${head()}<p class="muted">Gapni bosing — eshitasiz. Avval tinglang, keyin o'zingiz o'qing.</p>
+      <button class="say" id="playAll">🔊 Butun suhbatni eshitish</button>
+      <div style="margin-top:8px">${L.d.map((d,i)=>`<div class="dline" data-i="${i}"><div class="who">${d[0]}</div><div><div class="ru">${d[1]}</div><div class="uz">${d[2]}</div></div></div>`).join("")}</div>${nextBtn()}</div>`;
+    app.querySelectorAll(".dline").forEach(x=>x.onclick=()=>sayNow(L.d[x.dataset.i][1]));
+    document.getElementById("playAll").onclick = ()=>{ speechSynthesis.cancel(); let k=0; const go=()=>{ if(k<L.d.length) say(L.d[k++][1], go); }; go(); };
+  }
+  if (s === "quiz" || s === "review") return renderQuiz(s);
+  if (s === "speak"){
+    const items = shuffle(L.w.slice()).slice(0,3).concat(L.d.length ? [[L.d[0][1], "", L.d[0][2]]] : []);
+    app.innerHTML = `<div class="box">${head()}<p class="muted">O'zbekcha gapni <b>ruscha ovoz chiqarib</b> ayting. Keyin tugmani bosib, o'zingizni tekshiring.</p>
+      ${items.map((w,i)=>`<div class="sp"><div class="sprompt">🇺🇿 ${w[2]}</div><button class="reveal" data-i="${i}">👀 Javobni ko'rish va eshitish</button><div class="ans" id="ans${i}">🇷🇺 ${w[0]}</div></div>`).join("")}
+      ${nextBtn()}</div>`;
+    app.querySelectorAll(".reveal").forEach(b=>b.onclick=()=>{ const i=b.dataset.i; document.getElementById("ans"+i).style.display="block"; sayNow(items[i][0]); });
+  }
+  if (s === "finish"){
+    if (reviewMode){
+      app.innerHTML = `<div class="box center">${head()}<p style="font-size:40px;margin:6px">💪</p><p>Takrorlash tugadi! Har kuni bir oz takrorlash — eng yaxshi usul.</p>${nextBtn("🏠 Bosh sahifa")}</div>`;
+    } else {
+      if (isNew && !S.done.some(x=>x.i===L.idx)) { S.done.push({ i:L.idx, date:today() }); markActive(); save(); }
+      const last = L.idx === LESSONS.length-1;
+      app.innerHTML = `<div class="box center">${head()}<p style="font-size:44px;margin:6px">🎉</p>
+        <p><b>${L.idx+1}-dars tugadi!</b></p><p>${last ? "Siz butun kursni tugatdingiz! Endi rus tilida oddiy suhbat qila olasiz." : "Barakalla! Bugungi rejaning shu qismini bajardingiz."}</p>
+        ${nextBtn("🏠 Bosh sahifa")}</div>`;
+    }
+    document.getElementById("nextBtn").onclick = ()=>{ screen="home"; render(); window.scrollTo(0,0); };
+    setTimeout(()=>maybeTour("finish"), 150);
+    return;
+  }
+  const nb = document.getElementById("nextBtn"); if (nb) nb.onclick = nextStep;
+  setTimeout(()=>maybeTour(s), 150);
+}
+
+function makeQuestions(kind){
+  const qs = [];
+  const pool = kind === "review" ? learnedWords() : (L.idx === LESSONS.length-1 ? LESSONS.flatMap(l=>l.w) : L.w);
+  if (kind === "quiz" && L.g) L.g.forEach(g=>qs.push({ q:g[0], opts:g[1].slice(), ans:g[1][g[2]], why:g[3], sayIt:null }));
+  const need = kind === "review" ? 5 : 6;
+  const picks = shuffle(pool.slice()).slice(0, Math.max(0, need - qs.length));
+  picks.forEach((w,k)=>{
+    const others = shuffle(pool.filter(x=>x!==w)).slice(0,3);
+    if (k % 2 === 0) qs.push({ q:`<b>${w[0]}</b> — bu nima degani?`, opts:shuffle([w[2], ...others.map(o=>o[2])]), ans:w[2], why:`${w[0]} [${w[1]}] — ${w[2]}`, sayIt:w[0] });
+    else qs.push({ q:`Ruschasini toping: <b>«${w[2]}»</b>`, opts:shuffle([w[0], ...others.map(o=>o[0])]), ans:w[0], why:`«${w[2]}» — ${w[0]} [${w[1]}]`, sayIt:w[0] });
+  });
+  return qs;
+}
+let QS = [], qi = 0, score = 0;
+function renderQuiz(kind){
+  if (qi === 0 && !QS.length) { QS = makeQuestions(kind); score = 0; }
+  if (qi >= QS.length){
+    const n = QS.length;
+    app.innerHTML = `<div class="box center">${head()}<p style="font-size:40px;margin:6px">${score===n?'🌟':score>=n/2?'👍':'💪'}</p>
+      <p><b>Natija: ${score} / ${n}</b></p><p class="muted">${score===n?'A\'lo!':score>=n/2?'Yaxshi! Xatolarni yana bir ko\'rib chiqing.':'Qo\'rqmang — so\'zlarni yana bir marta takrorlang.'}</p>${nextBtn()}</div>`;
+    document.getElementById("nextBtn").onclick = ()=>{ QS=[]; qi=0; nextStep(); };
+    return;
+  }
+  const q = QS[qi];
+  app.innerHTML = `<div class="box">${head()}<div class="muted center">${qi+1} / ${QS.length}</div>
+    <div class="q">${q.q}</div>${q.sayIt?`<div class="center" style="margin-bottom:10px"><button class="say" id="qSay">🔊 Eshitish</button></div>`:""}
+    <div class="opts">${q.opts.map((o,i)=>`<button data-i="${i}">${o}</button>`).join("")}</div>
+    <div class="fb" id="fb"></div>${nextBtn("Keyingi savol ➜", true)}</div>`;
+  const qs = document.getElementById("qSay"); if (qs) qs.onclick = ()=>sayNow(q.sayIt);
+  let done = false;
+  app.querySelectorAll(".opts button").forEach(b=>b.onclick=()=>{
+    if (done) return; done = true;
+    const fb = document.getElementById("fb");
+    if (q.opts[b.dataset.i] === q.ans){ score++; b.classList.add("ok"); fb.style.color="#27ae60"; fb.textContent = "To'g'ri! 🎉 " + q.why; }
+    else { b.classList.add("bad"); app.querySelectorAll(".opts button").forEach(x=>{ if(q.opts[x.dataset.i]===q.ans) x.classList.add("ok"); }); fb.style.color="#e04848"; fb.textContent = "Xato. " + q.why; }
+    if (q.sayIt) sayNow(q.sayIt);
+    document.getElementById("nextBtn").style.display = "block";
+  });
+  document.getElementById("nextBtn").onclick = ()=>{ qi++; renderQuiz(kind); window.scrollTo(0,0); };
+  setTimeout(()=>maybeTour(kind), 150);
+}
+
+// ===== O'rgatish: ko'rsatamiz va bosib ko'rdiramiz =====
+const $ = s => document.querySelector(s);
+const POINT = '<span class="tpoint">👆</span>';
+const TOURS = {
+  intro: [
+    { text:'<span class="bigt">👋 Assalomu alaykum!</span>Bu kurs rus tilini <b>noldan suhbat darajasigacha</b> o\'rgatadi. Hammasi o\'zbekcha tushuntiriladi.<br>Men ko\'rsataman — <b>siz o\'zingiz bosasiz</b>.', btn:"Boshladik! 🚀" },
+    { el:()=>$(".paces"), text:`Avval <b>tezlikni</b> tanlang: kuniga qancha vaqtingiz bor? Bittasini bosing ${POINT}`, wait:true },
+    { el:()=>$("#plan"), text:'Bu — <b>bugungi reja</b>. Har kuni shu tartibda: takrorlash → qoida → so\'zlar → suhbat → mashq → gapirish.' },
+    { el:()=>$("#lessonList"), text:'Bu yerda <b>30 ta dars</b>. Tanlagan tezligingizga qarab, har kuni yangisi ochiladi 🔒' },
+    { el:()=>$(".stats"), text:'Bu yerda natijangiz: nechta dars o\'tdingiz va necha kun <b>ketma-ket</b> o\'qidingiz 🔥' },
+    { el:()=>$("#startBtn"), text:`Birinchi darsni boshlaymiz! Bosing ${POINT}`, wait:true }
+  ],
+  explain: [
+    { el:()=>$(".lex"), text:'Bu yerda <b>qoida</b> o\'zbekcha tushuntirilgan. Shoshilmasdan o\'qing.' },
+    { el:()=>$("#nextBtn"), text:`O'qib bo'lgach <b>«Keyingi»</b> ni bosing ${POINT}`, wait:true }
+  ],
+  words: [
+    { el:()=>$(".card"), text:`So'zni bosing — <b>ruscha talaffuzini</b> eshitasiz ${POINT}`, wait:true },
+    { el:()=>$(".card .tr"), text:'Qavs ichida — so\'z <b>qanday o\'qilishi</b> lotin harflarida. Ovoz chiqarib takrorlang!' },
+    { el:()=>$("#nextBtn"), text:'Hamma so\'zlarni eshitib, takrorlagach — <b>«Keyingi»</b>.' }
+  ],
+  dialog: [
+    { el:()=>$(".dline"), text:`Gapni bosing — eshitasiz ${POINT}`, wait:true },
+    { el:()=>$("#playAll"), text:'Bu tugma <b>butun suhbatni</b> boshidan oxirigacha o\'qib beradi.' }
+  ],
+  quiz: [
+    { el:()=>$(".opts"), text:`Endi mashq. To'g'ri javobni tanlang ${POINT}`, wait:true },
+    { el:()=>$("#fb"), text:'Bu yerda javob <b>izohi</b> chiqadi. Xato qilsangiz ham — izohni o\'qing.' },
+    { el:()=>$("#nextBtn"), text:`Keyingi savolga o'tish uchun bosing ${POINT}`, wait:true }
+  ],
+  review: [
+    { el:()=>$(".opts"), text:`Har bir dars <b>takrorlash</b> bilan boshlanadi — oldingi so'zlarni eslaysiz. Javobni tanlang ${POINT}`, wait:true }
+  ],
+  speak: [
+    { el:()=>$(".sprompt"), text:'Bu gapni <b>ruscha ovoz chiqarib</b> ayting. Gapirish — eng muhim mashq!' },
+    { el:()=>$(".reveal"), text:`Aytib bo'lgach, tekshirish uchun bosing ${POINT}`, wait:true }
+  ],
+  finish: [
+    { el:()=>$("#nextBtn"), text:'Dars tugadi! Bosh sahifada keyingi dars qachon ochilishini ko\'rasiz.' }
+  ],
+  locked: [
+    { el:()=>$("#plan"), text:'Bugungi reja bajarildi ✅ Keyingi dars tanlagan tezligingiz bo\'yicha ochiladi. Bugun yana mashq qilmoqchi bo\'lsangiz — <b>«Takrorlash»</b> ni bosing.' },
+    { el:()=>$("#setBtn"), text:'Tezlikni xohlagan payt <b>⚙️</b> orqali o\'zgartirasiz. <b>❓</b> esa shu ekranni yana tushuntiradi.' }
+  ]
+};
+const tb = $("#tourBlock"), ts = $("#tourSpot"), tbub = $("#tourBubble");
+let steps = [], si = 0, curEl = null;
+const tourOn = () => tb.style.display === "block";
+function seen(k){ return LS.get("seen_"+k, false); }
+function setSeen(k){ LS.set("seen_"+k, true); }
+function maybeTour(k){ if (tourOn() || seen(k) || !TOURS[k]) return; setSeen(k); startTour(TOURS[k]); }
+function startTour(list){ steps = list; si = 0; tb.style.display = "block"; showStep(); }
+function endTour(){ tb.style.display = ts.style.display = tbub.style.display = "none"; curEl = null; }
+function place(){
+  if (!steps[si]) return;
+  if (curEl){
+    const r = curEl.getBoundingClientRect(), pad = 6;
+    ts.className = "tspot"; ts.style.display = "block";
+    Object.assign(ts.style, { left:(r.left-pad)+"px", top:(r.top-pad)+"px", width:(r.width+pad*2)+"px", height:(r.height+pad*2)+"px" });
+    const below = r.bottom + 14, bh = tbub.offsetHeight || 150;
+    tbub.style.top = (below + bh < window.innerHeight ? below : Math.max(10, r.top - bh - 14)) + "px";
+  } else {
+    ts.className = "tspot none"; ts.style.display = "block";
+    Object.assign(ts.style, { left:"50%", top:"50%", width:"0px", height:"0px" });
+    tbub.style.top = Math.max(20, (window.innerHeight - (tbub.offsetHeight||200)) / 2) + "px";
+  }
+}
+function showStep(){
+  const st = steps[si];
+  if (!st){ endTour(); return; }
+  setTimeout(()=>{
+    curEl = st.el ? st.el() : null;
+    if (st.el && !curEl){ si++; showStep(); return; }
+    if (curEl) curEl.scrollIntoView({ block:"center", behavior:"instant" });
+    $("#tourText").innerHTML = st.text;
+    const nb = $("#tourNext");
+    nb.style.display = st.wait ? "none" : "inline-block";
+    nb.textContent = st.btn || "Keyingi ➜";
+    tbub.style.display = "block";
+    requestAnimationFrame(place);
+  }, 140);
+}
+function advance(){ si++; showStep(); }
+tb.addEventListener("click", e=>{
+  const st = steps[si]; if (!st || !st.wait || !curEl) return;
+  tb.style.pointerEvents = "none";
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  tb.style.pointerEvents = "";
+  if (under && curEl.contains(under)){ under.click(); advance(); }
+});
+$("#tourNext").onclick = advance;
+$("#tourSkip").onclick = endTour;
+window.addEventListener("resize", place);
+window.addEventListener("scroll", place, true);
+
+$("#helpBtn").onclick = ()=>{
+  if (tourOn()) return;
+  if (!S.pace || screen === "home") { if (!S.pace) startTour(TOURS.intro.slice(0,2)); else startTour(TOURS.intro.slice(2).filter(s=>!s.wait || $("#startBtn"))); return; }
+  if (screen === "lesson") { const k = stepList[step]; if (TOURS[k]) startTour(TOURS[k]); }
+};
+$("#setBtn").onclick = ()=>{ if (tourOn()) return; if (!S.pace) return; screen = "settings"; render(); };
+
+render();
+if (!seen("intro")) { setSeen("intro"); startTour(S.pace ? TOURS.intro.slice(2) : TOURS.intro); }
+</script>
+</body>
+</html>
