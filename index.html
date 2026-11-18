@@ -363,7 +363,7 @@ const FULL_TOUR = [
   { el:()=>$("#next"), text:'Зелёный — правильно, красный — ошибка. За правильный ответ — очко! ⭐<br>Нажми <b>«Дальше»</b> — будет новый вопрос ' + POINT, wait:true },
   { el:()=>tabBtn("Правила"), text:`Здесь простые <b>правила</b>. Нажми <b>«Правила»</b> ${POINT}`, wait:true, before:()=>{ mode="learn"; render(); } },
   { el:()=>$(".ex"), text:`Нажми на пример — услышишь, как он звучит ${POINT}`, wait:true },
-  { el:()=>$("#helpBtn"), text:'Когда откроешь другую тему в первый раз, я тоже покажу, что там делать.<br>Если забудешь — нажми <b>❓</b>, и я покажу всё снова.<br><b>Молодец! 🎉</b>', btn:"Начать учиться!", after:()=>{ cat="numbers"; mode="learn"; render(); } }
+  { el:()=>$("#helpBtn"), text:'Когда откроешь другую тему, я покажу, что там делать.<br>Если забудешь — нажми <b>❓</b>, и я объясню тот раздел, где ты сейчас.<br><b>Молодец! 🎉</b>', btn:"Начать учиться!", after:()=>{ ["animals:learn","animals:quiz","grammar:learn"].forEach(markSec); cat="numbers"; mode="learn"; render(); } }
 ];
 
 // Подсказки для каждого раздела: показываются, когда ребёнок впервые открывает раздел.
@@ -441,14 +441,12 @@ function storeV(){ try { localStorage.setItem("tourVersion", String(APP_VERSION)
 function startTour(list){
   if (!list.length) return;
   steps = list; si = 0; tb.style.display = "block";
-  if (list === FULL_TOUR) ["animals:learn","animals:quiz","grammar:learn"].forEach(markSec);
   showStep();
 }
-function endTour(skipAll){
+function endTour(){
   tb.style.display = ts.style.display = tbub.style.display = "none";
   curEl = null; storeV();
-  if (skipAll) Object.keys(SECTION_TOURS).concat(["numbers:quiz","fruits:quiz","vegetables:quiz","colors:quiz","animals:quiz"]).forEach(markSec);
-  else setTimeout(maybeSectionTour, 300);
+  setTimeout(maybeSectionTour, 300);
 }
 function place(){
   const st = steps[si]; if (!st) return;
@@ -494,13 +492,16 @@ tb.addEventListener("click", e=>{
   }
 });
 $("#tourNext").onclick = nextStep;
-$("#tourSkip").onclick = ()=>{ endTour(true); };
+$("#tourSkip").onclick = ()=>{ endTour(); };   // пропускаем только текущую подсказку
 window.addEventListener("resize", place);
 window.addEventListener("scroll", place, true);
+// ❓ — объясняет раздел, в котором ребёнок сейчас находится
 $("#helpBtn").onclick = ()=>{
-  try { Object.keys(localStorage).filter(k=>k.startsWith("sec_")).forEach(k=>localStorage.removeItem(k)); } catch(e) {}
-  markSec("numbers:learn"); cat="numbers"; mode="learn"; render(); startTour(FULL_TOUR); };
-
+  if (tourOn()) return;
+  const k = sectionKey();
+  const list = SECTION_TOURS[k] || (mode==="quiz" ? SECTION_TOURS["quiz"] : null);
+  if (list) startTour(list);
+};
 window.__toursReady = true;
 let seenV = null;
 try { seenV = localStorage.getItem("tourVersion"); } catch(e) {}
