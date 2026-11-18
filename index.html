@@ -44,11 +44,23 @@
   .ex b{color:#1d2330}
   .ex span{color:#5b6475;font-size:13px;display:block}
   .note{background:#fff7d6;border-radius:10px;padding:8px 10px;font-size:14px;margin-top:8px}
+  .help{position:absolute;right:14px;top:12px;border:0;background:rgba(255,255,255,.25);color:#fff;border-radius:50%;width:34px;height:34px;font-size:18px;cursor:pointer}
+  header{position:sticky}
+  .ov{position:fixed;inset:0;background:rgba(20,30,60,.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:14px}
+  .box{background:#fff;border-radius:18px;max-width:460px;width:100%;max-height:92vh;overflow:auto;padding:18px 18px 16px}
+  .box h2{margin:0 0 4px;font-size:21px;text-align:center}
+  .box .sub{text-align:center;color:#5b6475;font-size:14px;margin:0 0 12px}
+  .step{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-size:15px;line-height:1.4}
+  .step .ic{font-size:26px;flex:0 0 34px;text-align:center}
+  .parents{background:#eef3ff;border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.45;margin-top:12px;color:#3a4252}
+  .go{display:block;width:100%;margin-top:14px;border:0;background:#2f6fed;color:#fff;border-radius:12px;padding:14px;font-size:18px;font-weight:700;cursor:pointer}
+  .tst{display:block;width:100%;margin-top:8px;border:2px solid #2f6fed;background:#fff;color:#2f6fed;border-radius:12px;padding:10px;font-size:15px;cursor:pointer}
 </style>
 </head>
 <body>
 <header>
   <h1>🇬🇧 Учим английский</h1>
+  <button class="help" id="helpBtn" aria-label="Как пользоваться">❓</button>
   <div class="tabs" id="tabs"></div>
   <div class="modes">
     <button id="mLearn" class="on">📖 Учить</button>
@@ -56,6 +68,31 @@
   </div>
 </header>
 <main id="app"></main>
+
+<div class="ov" id="news" style="display:none">
+  <div class="box">
+    <h2>🎁 Что нового?</h2>
+    <p class="sub">В приложении появилось новое:</p>
+    <div id="newsList"></div>
+    <button class="go" id="newsOk">Понятно! 👍</button>
+  </div>
+</div>
+
+<div class="ov" id="welcome" style="display:none">
+  <div class="box">
+    <h2>👋 Привет!</h2>
+    <p class="sub">Здесь ты выучишь английские слова. Вот как это работает:</p>
+    <div class="step"><div class="ic">🗂️</div><div>Наверху выбери тему: <b>Числа, Животные, Фрукты, Овощи, Цвета</b> или <b>Правила</b>.</div></div>
+    <div class="step"><div class="ic">📖</div><div>Нажми <b>«Учить»</b> и смотри карточки. <b>Нажми на карточку</b> — телефон скажет слово по-английски. Повтори вслух!</div></div>
+    <div class="step"><div class="ic">🟣</div><div>Фиолетовые буквы <b>[кэт]</b> подсказывают, как читать слово.</div></div>
+    <div class="step"><div class="ic">✅</div><div>Когда выучишь — нажми <b>«Тест»</b>. Выбери правильный ответ и набирай очки!</div></div>
+    <div class="step"><div class="ic">📘</div><div>В разделе <b>«Правила»</b> — простые правила: a / an, много предметов, цвета, числа.</div></div>
+    <div class="step"><div class="ic">❓</div><div>Забыл, как пользоваться? Нажми <b>❓</b> вверху справа.</div></div>
+    <div class="parents"><b>Для родителей:</b> занимайтесь 10–15 минут в день, по одной теме. Сначала «Учить», потом «Тест». Звук идёт из телефона — проверьте громкость. Если звука нет, в настройках телефона в разделе «Синтез речи» (Text-to-speech) скачайте английский голос.</div>
+    <button class="tst" id="testSound">🔊 Проверить звук</button>
+    <button class="go" id="goBtn">Начать! 🚀</button>
+  </div>
+</div>
 
 <script>
 const DATA = {
@@ -312,6 +349,34 @@ function render(){
 document.getElementById("mLearn").onclick = ()=>{ mode="learn"; render(); };
 document.getElementById("mQuiz").onclick = ()=>{ mode="quiz"; score=0; total=0; render(); };
 render();
+
+// ===== Приветствие и «Что нового» =====
+// При каждом обновлении: увеличить APP_VERSION и добавить запись в NEWS.
+const APP_VERSION = 3;
+const NEWS = [
+  { v:2, ic:"📘", text:"Новый раздел <b>«Правила»</b>: a / an, много предметов, цвета, числа и простые фразы. Нажми на пример — услышишь его. В «Тесте» есть вопросы по правилам." },
+  { v:3, ic:"❓", text:"Кнопка <b>❓</b> вверху справа — там написано, как пользоваться приложением." }
+];
+
+const welcome = document.getElementById("welcome");
+const news = document.getElementById("news");
+function store(v){ try { localStorage.setItem("appVersion", String(v)); } catch(e) {} }
+function showWelcome(){ welcome.style.display = "flex"; }
+document.getElementById("helpBtn").onclick = showWelcome;
+document.getElementById("testSound").onclick = ()=>say("Hello! Let's learn English!");
+document.getElementById("goBtn").onclick = ()=>{ welcome.style.display = "none"; store(APP_VERSION); };
+document.getElementById("newsOk").onclick = ()=>{ news.style.display = "none"; store(APP_VERSION); };
+
+let seen = null;
+try { seen = localStorage.getItem("appVersion"); } catch(e) {}
+if (seen === null) {
+  showWelcome();                       // первый раз — полная инструкция
+} else if (Number(seen) < APP_VERSION) {
+  const fresh = NEWS.filter(n => n.v > Number(seen));
+  document.getElementById("newsList").innerHTML =
+    fresh.map(n => `<div class="step"><div class="ic">${n.ic}</div><div>${n.text}</div></div>`).join("");
+  if (fresh.length) news.style.display = "flex"; else store(APP_VERSION);
+}
 </script>
 </body>
 </html>
