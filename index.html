@@ -44,6 +44,17 @@
   .ex b{color:#1d2330}
   .ex span{color:#5b6475;font-size:13px;display:block}
   .note{background:#fff7d6;border-radius:10px;padding:8px 10px;font-size:14px;margin-top:8px}
+  .tblock{position:fixed;inset:0;z-index:60;background:transparent}
+  .tspot{position:fixed;z-index:61;border-radius:14px;box-shadow:0 0 0 4px #ffd23f,0 0 0 9999px rgba(15,25,50,.72);pointer-events:none;transition:all .25s}
+  .tspot.none{box-shadow:0 0 0 9999px rgba(15,25,50,.72)}
+  .tbubble{position:fixed;z-index:62;left:12px;right:12px;max-width:440px;margin:0 auto;background:#fff;border-radius:16px;padding:14px 16px;font-size:16px;line-height:1.45;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+  .tbubble .big{font-size:22px;font-weight:700;display:block;margin-bottom:4px}
+  .tbubble .small{font-size:13px;color:#5b6475;display:block;margin-top:6px}
+  .tbtns{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .tskip{border:0;background:none;color:#7a8396;font-size:14px;cursor:pointer;padding:6px}
+  .tnext{border:0;background:#2f6fed;color:#fff;border-radius:10px;padding:10px 18px;font-size:16px;font-weight:700;cursor:pointer}
+  .tpoint{display:inline-block;animation:bob 0.9s infinite}
+  @keyframes bob{50%{transform:translateY(-5px)}}
   .help{position:absolute;right:14px;top:12px;border:0;background:rgba(255,255,255,.25);color:#fff;border-radius:50%;width:34px;height:34px;font-size:18px;cursor:pointer}
   header{position:sticky}
   .ov{position:fixed;inset:0;background:rgba(20,30,60,.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:14px}
@@ -69,28 +80,13 @@
 </header>
 <main id="app"></main>
 
-<div class="ov" id="news" style="display:none">
-  <div class="box">
-    <h2>🎁 Что нового?</h2>
-    <p class="sub">В приложении появилось новое:</p>
-    <div id="newsList"></div>
-    <button class="go" id="newsOk">Понятно! 👍</button>
-  </div>
-</div>
-
-<div class="ov" id="welcome" style="display:none">
-  <div class="box">
-    <h2>👋 Привет!</h2>
-    <p class="sub">Здесь ты выучишь английские слова. Вот как это работает:</p>
-    <div class="step"><div class="ic">🗂️</div><div>Наверху выбери тему: <b>Числа, Животные, Фрукты, Овощи, Цвета</b> или <b>Правила</b>.</div></div>
-    <div class="step"><div class="ic">📖</div><div>Нажми <b>«Учить»</b> и смотри карточки. <b>Нажми на карточку</b> — телефон скажет слово по-английски. Повтори вслух!</div></div>
-    <div class="step"><div class="ic">🟣</div><div>Фиолетовые буквы <b>[кэт]</b> подсказывают, как читать слово.</div></div>
-    <div class="step"><div class="ic">✅</div><div>Когда выучишь — нажми <b>«Тест»</b>. Выбери правильный ответ и набирай очки!</div></div>
-    <div class="step"><div class="ic">📘</div><div>В разделе <b>«Правила»</b> — простые правила: a / an, много предметов, цвета, числа.</div></div>
-    <div class="step"><div class="ic">❓</div><div>Забыл, как пользоваться? Нажми <b>❓</b> вверху справа.</div></div>
-    <div class="parents"><b>Для родителей:</b> занимайтесь 10–15 минут в день, по одной теме. Сначала «Учить», потом «Тест». Звук идёт из телефона — проверьте громкость. Если звука нет, в настройках телефона в разделе «Синтез речи» (Text-to-speech) скачайте английский голос.</div>
-    <button class="tst" id="testSound">🔊 Проверить звук</button>
-    <button class="go" id="goBtn">Начать! 🚀</button>
+<div id="tourBlock" class="tblock" style="display:none"></div>
+<div id="tourSpot" class="tspot" style="display:none"></div>
+<div id="tourBubble" class="tbubble" style="display:none">
+  <div id="tourText"></div>
+  <div class="tbtns">
+    <button id="tourSkip" class="tskip">Пропустить</button>
+    <button id="tourNext" class="tnext">Дальше ➜</button>
   </div>
 </div>
 
@@ -350,32 +346,100 @@ document.getElementById("mLearn").onclick = ()=>{ mode="learn"; render(); };
 document.getElementById("mQuiz").onclick = ()=>{ mode="quiz"; score=0; total=0; render(); };
 render();
 
-// ===== Приветствие и «Что нового» =====
-// При каждом обновлении: увеличить APP_VERSION и добавить запись в NEWS.
-const APP_VERSION = 3;
-const NEWS = [
-  { v:2, ic:"📘", text:"Новый раздел <b>«Правила»</b>: a / an, много предметов, цвета, числа и простые фразы. Нажми на пример — услышишь его. В «Тесте» есть вопросы по правилам." },
-  { v:3, ic:"❓", text:"Кнопка <b>❓</b> вверху справа — там написано, как пользоваться приложением." }
+// ===== Обучение: показываем и даём попробовать =====
+// Шаг: { el: ()=>элемент, text, wait:true (ждём нажатия на элемент) или кнопка «Дальше» }
+const $ = sel => document.querySelector(sel);
+const tabBtn = name => [...document.querySelectorAll("#tabs button")].find(b => b.textContent.includes(name));
+const POINT = '<span class="tpoint">👆</span>';
+
+const FULL_TOUR = [
+  { text:'<span class="big">👋 Привет!</span>Давай я покажу, как тут всё работает. Ты сам(а) будешь нажимать туда, куда я покажу.<span class="small">Взрослым: пройдите это вместе с ребёнком, 1–2 минуты. Включите звук на телефоне.</span>', btn:"Давай! 🚀" },
+  { el:()=>tabBtn("Животные"), text:`Наверху — <b>темы</b>. Нажми на <b>«Животные»</b> ${POINT}`, wait:true },
+  { el:()=>$(".card"), text:`Это карточка. Нажми на неё — телефон скажет слово по-английски ${POINT}`, wait:true },
+  { el:()=>$(".card .tr"), text:'Слышал(а)? Это <b>cat</b> — кошка. 🐱<br>Фиолетовые буквы <b>[кэт]</b> подсказывают, как читать. <b>Скажи вслух: «кэт»!</b><span class="small">Не слышно? Сделай звук громче.</span>' },
+  { el:()=>$("#mQuiz"), text:`Теперь проверим себя! Нажми <b>«Тест»</b> ${POINT}`, wait:true },
+  { el:()=>$(".opts"), text:`Посмотри на картинку и выбери правильное английское слово ${POINT}`, wait:true },
+  { el:()=>$("#next"), text:'Зелёный — правильно, красный — ошибка. За правильный ответ — очко! ⭐<br>Нажми <b>«Дальше»</b> — будет новый вопрос ' + POINT, wait:true },
+  { el:()=>tabBtn("Правила"), text:`Здесь простые <b>правила</b>. Нажми <b>«Правила»</b> ${POINT}`, wait:true, before:()=>{ mode="learn"; render(); } },
+  { el:()=>$(".ex"), text:`Нажми на пример — услышишь, как он звучит ${POINT}`, wait:true },
+  { el:()=>$("#helpBtn"), text:'Если забудешь, как пользоваться, — нажми <b>❓</b>, и я покажу всё снова.<br><b>Молодец, ты всё умеешь! 🎉</b>', btn:"Начать учиться!", after:()=>{ cat="numbers"; mode="learn"; render(); } }
 ];
 
-const welcome = document.getElementById("welcome");
-const news = document.getElementById("news");
-function store(v){ try { localStorage.setItem("appVersion", String(v)); } catch(e) {} }
-function showWelcome(){ welcome.style.display = "flex"; }
-document.getElementById("helpBtn").onclick = showWelcome;
-document.getElementById("testSound").onclick = ()=>say("Hello! Let's learn English!");
-document.getElementById("goBtn").onclick = ()=>{ welcome.style.display = "none"; store(APP_VERSION); };
-document.getElementById("newsOk").onclick = ()=>{ news.style.display = "none"; store(APP_VERSION); };
+// Новые функции: при каждом обновлении увеличить APP_VERSION
+// и добавить сюда шаги, которые показывают и дают попробовать новое.
+const APP_VERSION = 1;
+const NEWS = [
+  // пример: { v:2, steps:[ { text:'<span class="big">🎁 Новое!</span>...', btn:"Покажи!" }, { el:()=>tabBtn("Одежда"), text:`Нажми ${POINT}`, wait:true } ] }
+];
 
-let seen = null;
-try { seen = localStorage.getItem("appVersion"); } catch(e) {}
-if (seen === null) {
-  showWelcome();                       // первый раз — полная инструкция
-} else if (Number(seen) < APP_VERSION) {
-  const fresh = NEWS.filter(n => n.v > Number(seen));
-  document.getElementById("newsList").innerHTML =
-    fresh.map(n => `<div class="step"><div class="ic">${n.ic}</div><div>${n.text}</div></div>`).join("");
-  if (fresh.length) news.style.display = "flex"; else store(APP_VERSION);
+const tb = $("#tourBlock"), ts = $("#tourSpot"), tbub = $("#tourBubble");
+let steps = [], si = 0, curEl = null;
+
+function storeV(){ try { localStorage.setItem("tourVersion", String(APP_VERSION)); } catch(e) {} }
+
+function startTour(list){
+  if (!list.length) return;
+  steps = list; si = 0; tb.style.display = "block"; showStep();
+}
+function endTour(){
+  tb.style.display = ts.style.display = tbub.style.display = "none";
+  curEl = null; storeV();
+}
+function place(){
+  const st = steps[si]; if (!st) return;
+  if (curEl){
+    const r = curEl.getBoundingClientRect(), pad = 6;
+    ts.className = "tspot"; ts.style.display = "block";
+    Object.assign(ts.style, { left:(r.left-pad)+"px", top:(r.top-pad)+"px", width:(r.width+pad*2)+"px", height:(r.height+pad*2)+"px" });
+    const below = r.bottom + 14, bh = tbub.offsetHeight || 150;
+    tbub.style.top = (below + bh < window.innerHeight ? below : Math.max(10, r.top - bh - 14)) + "px";
+  } else {
+    ts.className = "tspot none"; ts.style.display = "block";
+    Object.assign(ts.style, { left:"50%", top:"50%", width:"0px", height:"0px" });
+    tbub.style.top = Math.max(20, (window.innerHeight - (tbub.offsetHeight||200)) / 2) + "px";
+  }
+}
+function showStep(){
+  const st = steps[si];
+  if (!st){ endTour(); return; }
+  if (st.before) st.before();
+  setTimeout(()=>{
+    curEl = st.el ? st.el() : null;
+    if (st.el && !curEl){ si++; showStep(); return; }   // элемента нет — пропускаем шаг
+    if (curEl) curEl.scrollIntoView({ block:"center", behavior:"instant" });
+    $("#tourText").innerHTML = st.text;
+    const nb = $("#tourNext");
+    nb.style.display = st.wait ? "none" : "inline-block";
+    nb.textContent = st.btn || "Дальше ➜";
+    tbub.style.display = "block";
+    requestAnimationFrame(place);
+  }, 120);
+}
+function nextStep(){ const st = steps[si]; if (st && st.after) st.after(); si++; showStep(); }
+
+// нажатие по затемнению: пропускаем только нажатие на выделенный элемент
+tb.addEventListener("click", e=>{
+  const st = steps[si]; if (!st || !st.wait || !curEl) return;
+  tb.style.pointerEvents = "none";
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  tb.style.pointerEvents = "";
+  if (under && curEl.contains(under)){
+    under.click();
+    nextStep();
+  }
+});
+$("#tourNext").onclick = nextStep;
+$("#tourSkip").onclick = ()=>{ endTour(); cat="numbers"; mode="learn"; render(); };
+window.addEventListener("resize", place);
+window.addEventListener("scroll", place, true);
+$("#helpBtn").onclick = ()=>{ cat="numbers"; mode="learn"; render(); startTour(FULL_TOUR); };
+
+let seenV = null;
+try { seenV = localStorage.getItem("tourVersion"); } catch(e) {}
+if (seenV === null) startTour(FULL_TOUR);
+else if (Number(seenV) < APP_VERSION){
+  const fresh = NEWS.filter(n => n.v > Number(seenV)).flatMap(n => n.steps);
+  fresh.length ? startTour(fresh) : storeV();
 }
 </script>
 </body>
