@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Английский: числа, животные, фрукты, овощи</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f4f7fb;color:#1d2330}
+  header{background:#2f6fed;color:#fff;padding:14px 16px 10px;position:sticky;top:0;z-index:5}
+  h1{margin:0 0 10px;font-size:19px}
+  .tabs,.modes{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button,.modes button{border:0;border-radius:20px;padding:8px 13px;font-size:15px;background:rgba(255,255,255,.2);color:#fff;cursor:pointer}
+  .tabs button.on{background:#fff;color:#2f6fed;font-weight:700}
+  .modes{margin-top:8px}
+  .modes button.on{background:#ffd23f;color:#1d2330;font-weight:700}
+  main{padding:14px;max-width:900px;margin:0 auto}
+  .hint{font-size:14px;color:#5b6475;margin:0 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .card{background:#fff;border-radius:14px;padding:12px 8px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);cursor:pointer;user-select:none;transition:transform .1s}
+  .card:active{transform:scale(.96)}
+  .pic{font-size:42px;line-height:1.1;min-height:48px;display:flex;align-items:center;justify-content:center}
+  .num{font-size:36px;font-weight:800;color:#2f6fed}
+  .en{font-size:20px;font-weight:700;margin-top:6px}
+  .tr{font-size:14px;color:#7a4fd6;margin-top:2px}
+  .ru{font-size:15px;color:#3a4252;margin-top:4px}
+  .quiz{background:#fff;border-radius:16px;padding:18px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .quiz .big{font-size:72px;min-height:84px}
+  .quiz .bignum{font-size:64px;font-weight:800;color:#2f6fed}
+  .quiz .q{font-size:20px;margin:8px 0 14px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opts button{font-size:19px;padding:14px 6px;border-radius:12px;border:2px solid #d6dcea;background:#fff;cursor:pointer}
+  .opts button.ok{background:#d9f7e3;border-color:#2bb35a}
+  .opts button.bad{background:#fde0e0;border-color:#e04848}
+  .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:15px}
+  .say{border:0;background:#eef3ff;color:#2f6fed;border-radius:20px;padding:8px 14px;font-size:15px;cursor:pointer}
+  .next{margin-top:14px;border:0;background:#2f6fed;color:#fff;border-radius:12px;padding:12px 22px;font-size:17px;cursor:pointer;display:none}
+  .fb{min-height:24px;margin-top:10px;font-size:17px;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <h1>🇬🇧 Учим английский</h1>
+  <div class="tabs" id="tabs"></div>
+  <div class="modes">
+    <button id="mLearn" class="on">📖 Учить</button>
+    <button id="mQuiz">✅ Тест</button>
+  </div>
+</header>
+<main id="app"></main>
+
+<script>
+const DATA = {
+  numbers: { title:"🔢 Числа", items:[
+    [1,"one","уан","один"],[2,"two","ту","два"],[3,"three","сри","три"],[4,"four","фо","четыре"],
+    [5,"five","файв","пять"],[6,"six","сикс","шесть"],[7,"seven","сэвн","семь"],[8,"eight","эйт","восемь"],
+    [9,"nine","найн","девять"],[10,"ten","тэн","десять"],[11,"eleven","илэвн","одиннадцать"],[12,"twelve","твэлв","двенадцать"],
+    [13,"thirteen","сётин","тринадцать"],[14,"fourteen","фотин","четырнадцать"],[15,"fifteen","фифтин","пятнадцать"],
+    [16,"sixteen","сикстин","шестнадцать"],[17,"seventeen","сэвнтин","семнадцать"],[18,"eighteen","эйтин","восемнадцать"],
+    [19,"nineteen","найнтин","девятнадцать"],[20,"twenty","твэнти","двадцать"],[30,"thirty","сёти","тридцать"],
+    [40,"forty","фоти","сорок"],[50,"fifty","фифти","пятьдесят"],[60,"sixty","сиксти","шестьдесят"],
+    [70,"seventy","сэвнти","семьдесят"],[80,"eighty","эйти","восемьдесят"],[90,"ninety","найнти","девяносто"],
+    [100,"one hundred","уан хандрэд","сто"]
+  ]},
+  animals: { title:"🐾 Животные", items:[
+    ["🐱","cat","кэт","кошка"],["🐶","dog","дог","собака"],["🐮","cow","кау","корова"],["🐴","horse","хорс","лошадь"],
+    ["🐑","sheep","шип","овца"],["🐷","pig","пиг","свинья"],["🐔","chicken","чикин","курица"],["🦆","duck","дак","утка"],
+    ["🐰","rabbit","рэбит","кролик"],["🐭","mouse","маус","мышь"],["🐐","goat","гоут","коза"],["🦁","lion","лайэн","лев"],
+    ["🐯","tiger","тайгэ","тигр"],["🐻","bear","бэа","медведь"],["🐺","wolf","вулф","волк"],["🦊","fox","фокс","лиса"],
+    ["🐘","elephant","элифэнт","слон"],["🐒","monkey","манки","обезьяна"],["🦒","giraffe","джираф","жираф"],
+    ["🦓","zebra","зибра","зебра"],["🐟","fish","фиш","рыба"],["🐦","bird","бёд","птица"],["🐸","frog","фрог","лягушка"],
+    ["🐍","snake","снэйк","змея"]
+  ]},
+  fruits: { title:"🍎 Фрукты", items:[
+    ["🍎","apple","эпл","яблоко"],["🍌","banana","бэнана","банан"],["🍊","orange","ориндж","апельсин"],
+    ["🍋","lemon","лэмэн","лимон"],["🍐","pear","пэа","груша"],["🍇","grapes","грэйпс","виноград"],
+    ["🍓","strawberry","стробэри","клубника"],["🍒","cherry","чэри","вишня"],["🍉","watermelon","уотэмэлэн","арбуз"],
+    ["🍈","melon","мэлэн","дыня"],["🍑","peach","пич","персик"],["🍍","pineapple","пайнэпл","ананас"],
+    ["🥭","mango","мэнгоу","манго"],["🥝","kiwi","киви","киви"],["🥥","coconut","коукэнат","кокос"]
+  ]},
+  vegetables: { title:"🥕 Овощи", items:[
+    ["🍅","tomato","тэмэйтоу","помидор"],["🥔","potato","пэтэйтоу","картофель"],["🥕","carrot","кэрэт","морковь"],
+    ["🥒","cucumber","кьюкамбэ","огурец"],["🧅","onion","аньэн","лук"],["🧄","garlic","гарлик","чеснок"],
+    ["🥬","cabbage","кэбидж","капуста"],["🌽","corn","корн","кукуруза"],["🫑","pepper","пэпэ","перец"],
+    ["🍆","eggplant","эгплант","баклажан"],["🥦","broccoli","броколи","брокколи"],["🍄","mushroom","машрум","гриб"]
+  ]},
+  colors: { title:"🎨 Цвета", items:[
+    ["#e53935","red","рэд","красный"],["#1e4fd6","blue","блу","синий"],["#64b5f6","light blue","лайт блу","голубой"],
+    ["#2e9e44","green","грин","зелёный"],["#fdd835","yellow","йелоу","жёлтый"],["#fb8c00","orange","ориндж","оранжевый"],
+    ["#f48fb1","pink","пинк","розовый"],["#8e24aa","purple","пёпл","фиолетовый"],["#795548","brown","браун","коричневый"],
+    ["#111111","black","блэк","чёрный"],["#ffffff","white","уайт","белый"],["#9e9e9e","grey","грэй","серый"]
+  ]}
+};
+
+let cat = "numbers", mode = "learn", score = 0, total = 0;
+const app = document.getElementById("app");
+
+// --- озвучка (работает без интернета, голос телефона) ---
+let enVoice = null;
+function pickVoice(){
+  const v = speechSynthesis.getVoices();
+  enVoice = v.find(x=>/en[-_]GB/i.test(x.lang)) || v.find(x=>/en[-_]US/i.test(x.lang)) || v.find(x=>/^en/i.test(x.lang)) || null;
+}
+if ("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text){
+  if (!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = enVoice ? enVoice.lang : "en-GB";
+  if (enVoice) u.voice = enVoice;
+  u.rate = 0.8;
+  speechSynthesis.speak(u);
+}
+
+function picHTML(item, big){
+  if (cat === "colors"){
+    const s = big ? 90 : 52;
+    return `<div class="${big?'big':'pic'}"><span style="display:inline-block;width:${s}px;height:${s}px;border-radius:50%;background:${item[0]};border:2px solid #cfd6e4"></span></div>`;
+  }
+  return cat === "numbers"
+    ? `<div class="${big?'bignum':'num'}">${item[0]}</div>`
+    : `<div class="${big?'big':'pic'}">${item[0]}</div>`;
+}
+
+function renderTabs(){
+  const t = document.getElementById("tabs");
+  t.innerHTML = "";
+  Object.keys(DATA).forEach(k=>{
+    const b = document.createElement("button");
+    b.textContent = DATA[k].title;
+    if (k===cat) b.className = "on";
+    b.onclick = ()=>{ cat = k; score = 0; total = 0; render(); };
+    t.appendChild(b);
+  });
+}
+
+function renderLearn(){
+  const items = DATA[cat].items;
+  let h = `<p class="hint">Нажми на карточку — услышишь, как слово звучит по-английски. Фиолетовым — произношение русскими буквами.${cat==="numbers"?" Звук «th» (three, thirty) произносится с языком между зубами — примерно как «с».":""}${cat==="colors"?" В английском «синий» и «голубой» — оба blue; «голубой» часто говорят light blue.":""}</p><div class="grid">`;
+  items.forEach((it,i)=>{
+    h += `<div class="card" data-i="${i}">${picHTML(it)}<div class="en">${it[1]}</div><div class="tr">[${it[2]}]</div><div class="ru">${it[3]}</div></div>`;
+  });
+  app.innerHTML = h + "</div>";
+  app.querySelectorAll(".card").forEach(c=>c.onclick=()=>say(items[c.dataset.i][1]));
+}
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function renderQuiz(){
+  const items = DATA[cat].items;
+  const ans = items[Math.floor(Math.random()*items.length)];
+  const opts = shuffle([ans, ...shuffle(items.filter(x=>x!==ans)).slice(0,3)]);
+  app.innerHTML = `
+    <div class="quiz">
+      <div class="row"><span>Счёт: <b>${score}</b> из ${total}</span><button class="say" id="sayBtn">🔊 Послушать</button></div>
+      ${picHTML(ans,true)}
+      <div class="q">Как по-английски <b>«${ans[3]}»</b>?</div>
+      <div class="opts">${opts.map((o,i)=>`<button data-i="${i}">${o[1]}</button>`).join("")}</div>
+      <div class="fb" id="fb"></div>
+      <button class="next" id="next">Дальше ➜</button>
+    </div>`;
+  document.getElementById("sayBtn").onclick = ()=>say(ans[1]);
+  let done = false;
+  app.querySelectorAll(".opts button").forEach(b=>{
+    b.onclick = ()=>{
+      if (done) return; done = true; total++;
+      const pick = opts[b.dataset.i];
+      const fb = document.getElementById("fb");
+      if (pick===ans){ score++; b.classList.add("ok"); fb.textContent="Правильно! 🎉"; fb.style.color="#2bb35a"; }
+      else {
+        b.classList.add("bad");
+        app.querySelectorAll(".opts button").forEach(x=>{ if(opts[x.dataset.i]===ans) x.classList.add("ok"); });
+        fb.textContent = `Неправильно. Правильно: ${ans[1]} [${ans[2]}]`; fb.style.color="#e04848";
+      }
+      say(ans[1]);
+      app.querySelector(".row b").textContent = score;
+      app.querySelector(".row span").lastChild.textContent = " из " + total;
+      document.getElementById("next").style.display = "inline-block";
+    };
+  });
+  document.getElementById("next").onclick = renderQuiz;
+}
+
+function render(){
+  renderTabs();
+  document.getElementById("mLearn").className = mode==="learn"?"on":"";
+  document.getElementById("mQuiz").className = mode==="quiz"?"on":"";
+  mode==="learn" ? renderLearn() : renderQuiz();
+  window.scrollTo(0,0);
+}
+document.getElementById("mLearn").onclick = ()=>{ mode="learn"; render(); };
+document.getElementById("mQuiz").onclick = ()=>{ mode="quiz"; score=0; total=0; render(); };
+render();
+</script>
+</body>
+</html>
